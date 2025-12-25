@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our S.P.A.C.E. Studios | Medical Hair Restoration Arlington</title>
+    <!-- Tailwind for Styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Explicitly set globals for Lucide-React to pick up -->
+    <script>
+        window.React = React;
+        window.ReactDOM = ReactDOM;
+    </script>
+    
+    <!-- Lucide React UMD CDN (Correct path for standalone React environments) -->
+    <script src="https://unpkg.com/lucide-react/dist/umd/lucide-react.js"></script>
+    
+    <!-- Babel for Single File JSX Execution -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .animate-fade-in { animation: fadeIn 0.8s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-white text-slate-900 selection:bg-amber-100 selection:text-amber-900">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        
+        // Use the global 'lucide' object provided by the UMD build
+        // We use a fallback to ensure we catch whichever global the CDN defines
+        const lucideIcons = window.lucide || window.Lucide || {};
+        const { 
+            Heart, ShieldCheck, Microscope, Menu, X, ChevronRight, 
+            Award, CheckCircle2, FileText, Clock, MapPin, Mail, 
+            Sparkles, Send, Loader2, MessageSquare, Info, Zap
+        } = lucideIcons;
+
+        // Fallback Icon component in case destructuring fails
+        const SafeIcon = ({ icon: IconComponent, size = 24, className = "" }) => {
+            if (!IconComponent) return null;
+            return <IconComponent size={size} className={className} />;
+        };
+
+        const App = () => {
+            const [isMenuOpen, setIsMenuOpen] = useState(false);
+            const [activeTab, setActiveTab] = useState('home');
+            const [scrolled, setScrolled] = useState(false);
+            const [aiPrompt, setAiPrompt] = useState('');
+            const [aiResponse, setAiResponse] = useState('');
+            const [isAiLoading, setIsAiLoading] = useState(false);
+            const [currentAiMode, setCurrentAiMode] = useState('ritual');
+
+            useEffect(() => {
+                const handleScroll = () => setScrolled(window.scrollY > 20);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            // Gemini API Call
+            const callGemini = async (prompt) => {
+                const apiKey = "AIzaSyCPPimOx-wIDtTr8gRjzzmHY7yQvMgO2pU"; // Set your API key here
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+                
+                const systemInstructions = {
+                    ritual: "You are the AI Assistant for Our S.P.A.C.E. Studios. Tone: Affirming, clinical yet soulful. Create a personalized scalp-health ritual focused on 'deeply seen, immensely loved, and securely held'.",
+                    texture: "Help identify hair texture (Types 2, 3, 4) and suggest matching medical-grade prosthetics.",
+                    medical: "Explain clinical codes like A9282 and help draft insurance reimbursement notes."
+                };
+
+                setIsAiLoading(true);
+                setAiResponse('');
+
+                const fetchWithRetry = async (attempt = 0) => {
+                    try {
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [{ parts: [{ text: prompt }] }],
+                                systemInstruction: { parts: [{ text: systemInstructions[currentAiMode] }] }
+                            })
+                        });
+                        if (!response.ok) throw new Error('API Error');
+                        const data = await response.json();
+                        return data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    } catch (error) {
+                        if (attempt < 4) {
+                            await new Promise(r => setTimeout(r, Math.pow(2, attempt) * 1000));
+                            return fetchWithRetry(attempt + 1);
+                        }
+                        throw error;
+                    }
+                };
+
+                try {
+                    const result = await fetchWithRetry();
+                    setAiResponse(result);
+                } catch (e) {
+                    setAiResponse("Our sanctuary is experiencing a quiet moment. Please try again or book a consultation.");
+                } finally {
+                    setIsAiLoading(false);
+                }
+            };
+
+            const Nav = () => (
+                <nav className={`fixed top-0 w-full z-50 transition-all duration-700 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg py-4' : 'bg-transparent py-8'}`}>
+                    <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+                        <div className="cursor-pointer group flex items-center gap-2" onClick={() => setActiveTab('home')}>
+                            <h1 className="text-xl md:text-2xl font-serif italic tracking-tight group-hover:text-amber-900 transition-colors">
+                                Our S.P.A.C.E. <span className="text-[10px] font-bold uppercase tracking-[.4em] ml-2 text-slate-400">Studios</span>
+                            </h1>
+                        </div>
+                        <div className="hidden lg:flex gap-10 items-center">
+                            {['home', 'about', 'services', 'assistant', 'medical'].map((tab) => (
+                                <button key={tab} onClick={() => setActiveTab(tab)} className={`uppercase tracking-widest text-[10px] font-bold transition-all ${activeTab === tab ? 'text-amber-800' : 'text-slate-500 hover:text-slate-900'}`}>
+                                    {tab === 'medical' ? 'Partners' : tab}
+                                </button>
+                            ))}
+                            <button onClick={() => setActiveTab('services')} className="bg-slate-900 text-white px-6 py-2 uppercase tracking-widest text-[10px] font-bold hover:bg-amber-800 transition-all">Consultation</button>
+                        </div>
+                        <button className="lg:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                            {isMenuOpen ? <SafeIcon icon={X} size={24} /> : <SafeIcon icon={Menu} size={24} />}
+                        </button>
+                    </div>
+                </nav>
+            );
+
+            const Home = () => (
+                <div className="animate-fade-in">
+                    <section className="relative h-[90vh] flex items-center justify-center overflow-hidden bg-slate-100 px-4">
+                        <div className="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1594132176008-0919df495333?q=80&w=2070')] bg-cover bg-center"></div>
+                        <div className="relative z-10 text-center max-w-4xl">
+                            <span className="uppercase tracking-[.4em] text-xs text-amber-800 mb-6 block font-bold">Arlington, Virginia</span>
+                            <h1 className="text-5xl md:text-7xl font-serif text-slate-900 mb-8 italic">Restoring Identity.</h1>
+                            <p className="text-lg md:text-xl text-slate-700 mb-10 font-light italic max-w-2xl mx-auto">Medical Hair Restoration & Cranial Prosthetics engineered for Oncology and Alopecia.</p>
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                <button onClick={() => setActiveTab('services')} className="bg-slate-900 text-white px-8 py-4 uppercase tracking-widest text-sm hover:bg-slate-800 shadow-lg">Request Consultation</button>
+                                <button onClick={() => setActiveTab('assistant')} className="border border-slate-900 text-slate-900 px-8 py-4 uppercase tracking-widest text-sm hover:bg-slate-50">✨ AI Restoration Guide</button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            );
+
+            const Assistant = () => (
+                <div className="py-32 px-4 max-w-4xl mx-auto animate-fade-in">
+                    <div className="text-center mb-16">
+                        <h2 className="text-4xl font-serif italic mb-4">✨ Restoration Assistant</h2>
+                        <p className="text-slate-500 italic">Experience a moment of AI-guided care.</p>
+                    </div>
+                    <div className="bg-white border border-slate-100 shadow-2xl">
+                        <div className="flex border-b">
+                            {['ritual', 'texture', 'medical'].map(m => (
+                                <button key={m} onClick={() => {setCurrentAiMode(m); setAiResponse('');}} className={`flex-1 py-4 text-[10px] font-bold uppercase tracking-widest ${currentAiMode === m ? 'bg-slate-900 text-white' : 'text-slate-400'}`}>
+                                    {m}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="p-8 md:p-12">
+                            {!aiResponse && !isAiLoading && (
+                                <div className="space-y-6 text-center">
+                                    <textarea value={aiPrompt} onChange={e => setAiPrompt(e.target.value)} placeholder="Describe your journey stage or hair texture..." className="w-full bg-slate-50 p-6 italic font-light h-32 outline-none focus:ring-1 focus:ring-amber-200 resize-none" />
+                                    <button onClick={() => callGemini(aiPrompt)} disabled={!aiPrompt} className="bg-slate-900 text-white px-10 py-4 uppercase tracking-widest text-xs disabled:opacity-30">Get Personalized Guidance</button>
+                                </div>
+                            )}
+                            {isAiLoading && (
+                                <div className="py-20 text-center space-y-4">
+                                    <SafeIcon icon={Loader2} className="w-8 h-8 mx-auto animate-spin text-amber-600" />
+                                    <p className="animate-pulse italic text-slate-400">Deeply seeing you...</p>
+                                </div>
+                            )}
+                            {aiResponse && (
+                                <div className="bg-slate-50 p-8 border-l-4 border-amber-600 italic font-light text-slate-600 leading-relaxed whitespace-pre-line">
+                                    {aiResponse}
+                                    <button onClick={() => setAiResponse('')} className="block mt-8 text-xs font-bold uppercase tracking-widest text-slate-900 border-b border-slate-900">Ask Another Question</button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+
+            const About = () => (
+                <div className="py-32 px-6 max-w-3xl mx-auto animate-fade-in">
+                    <h2 className="text-4xl font-serif italic mb-8 text-center">The Donna Jean Legacy</h2>
+                    <div className="prose prose-slate font-light italic text-slate-600 leading-relaxed text-lg">
+                        <p className="mb-6 text-center">My mother, Donna Jean, fought Multiple Myeloma for eight years. I watched her struggle to maintain her dignity as she transitioned from a salon client to a patient.</p>
+                        <p className="mb-6 text-center">I created Our S.P.A.C.E. Studios to be the sanctuary she deserved. We create containers where folks feel deeply seen, immensely loved, and securely held.</p>
+                        <div className="bg-amber-50 p-10 border-l-4 border-amber-500 my-10 text-center">
+                            <p className="text-slate-900 font-serif text-2xl">"We restore more than hair; we restore the ritual of being seen."</p>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            const Medical = () => (
+                <div className="py-32 px-6 max-w-4xl mx-auto animate-fade-in">
+                    <h2 className="text-4xl font-serif italic mb-12 text-center">For Medical Providers</h2>
+                    <div className="grid md:grid-cols-2 gap-10">
+                        <div className="bg-slate-900 text-white p-10 flex flex-col justify-center">
+                            <h3 className="text-xl font-serif italic mb-6 flex items-center gap-2">
+                                <SafeIcon icon={ShieldCheck} size={20} className="text-amber-500" /> NPI & Clinical Data
+                            </h3>
+                            <ul className="space-y-4 text-sm text-slate-400 font-light uppercase tracking-widest">
+                                <li>• NAICS: 339113</li>
+                                <li>• CPT: A9282 (Prosthesis)</li>
+                                <li>• Minority-Owned Small Business</li>
+                                <li>• Arlington VAMC Provider Ready</li>
+                            </ul>
+                        </div>
+                        <div className="bg-amber-50 p-10 flex flex-col justify-center">
+                            <h3 className="text-xl font-serif italic mb-6 flex items-center gap-2">
+                                <SafeIcon icon={Info} size={20} className="text-amber-700" /> Patient Navigation
+                            </h3>
+                            <p className="text-slate-600 font-light text-sm italic mb-6">We provide full Superbills for out-of-network reimbursement and specialize in Type 4 hair textures often underserved in medical settings.</p>
+                            <button className="text-amber-800 font-bold uppercase tracking-widest text-xs border-b border-amber-800 self-start">Download Provider Packet</button>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            const Services = () => (
+                <div className="py-32 px-6 max-w-6xl mx-auto animate-fade-in">
+                    <h2 className="text-4xl font-serif italic mb-12 text-center">Restorative Services</h2>
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {[
+                            { name: "Consultation", price: "$200+", desc: "Scalp mapping, trichology assessment, and insurance coding guidance.", icon: FileText },
+                            { name: "Medical Prosthesis", price: "$2,800+", desc: "Custom-colored, medical-grade foundations engineered for sensitivity.", icon: Heart },
+                            { name: "Scalp Therapy", price: "$180/mo", desc: "Monthly maintenance to support hygiene and follicle regrowth.", icon: Clock }
+                        ].map((s, i) => (
+                            <div key={i} className="border border-slate-100 p-10 hover:shadow-xl transition-all bg-white">
+                                <div className="text-amber-700 mb-6"><SafeIcon icon={s.icon} size={28} /></div>
+                                <h3 className="text-2xl font-serif italic mb-2">{s.name}</h3>
+                                <p className="text-amber-700 font-bold text-xs uppercase tracking-widest mb-6">{s.price}</p>
+                                <p className="text-slate-500 font-light text-sm italic mb-8">{s.desc}</p>
+                                <button className="text-slate-900 text-xs font-bold uppercase tracking-widest border-b border-slate-900">Request Service</button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+
+            return (
+                <div className="min-h-screen">
+                    <Nav />
+                    <main>
+                        {activeTab === 'home' && <Home />}
+                        {activeTab === 'about' && <About />}
+                        {activeTab === 'services' && <Services />}
+                        {activeTab === 'assistant' && <Assistant />}
+                        {activeTab === 'medical' && <Medical />}
+                    </main>
+                    <footer className="bg-slate-50 py-20 px-6 border-t mt-20">
+                        <div className="max-w-6xl mx-auto text-center">
+                            <h2 className="text-2xl font-serif italic mb-4">Our S.P.A.C.E. Studios</h2>
+                            <p className="text-slate-400 text-xs uppercase tracking-widest">Arlington, Virginia • Medical Hair Specialists</p>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
