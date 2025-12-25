@@ -70,7 +70,7 @@
 
             // Gemini API Call
             const callGemini = async (prompt) => {
-                const apiKey = ""; // Set your API key here
+                const apiKey = "AIzaSyCPPimOx-wIDtTr8gRjzzmHY7yQvMgO2pU"; // Set your API key here
                 const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
                 
                 const systemInstructions = {
