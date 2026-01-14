@@ -111,24 +111,8 @@
                 btn.innerHTML = 'SEND LOVE LETTER';
             }
         };
-    </script>
- 
-<!-- Firebase Second Version -->
-    <script type="module">
-    
-import { initializeApp } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js)";
-import { getAuth, signInAnonymously, onAuthStateChanged } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js)";
-import { getFirestore, collection, onSnapshot, doc, deleteDoc } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js)";
-
-// REPLACE with your actual config or the environment variables
-const firebaseConfig = JSON.parse(__firebase_config); 
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'your-app-id';
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-// Global handler for deletion (needed for HTML onclick in a module)
+        
+    // Global handler for deletion (needed for HTML onclick in a module)
 window.deleteLead = async (leadId) => {
     // Custom UI confirmation can be used here; using browser default for simplicity
     if (!confirm("Are you sure you want to remove this patient inquiry from the dashboard?")) return;
