@@ -10,44 +10,70 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<script type="module">   
+    import { initializeApp } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js)";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js)";
+import { getFirestore, collection, onSnapshot, doc, deleteDoc } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js)";
+
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+};
+
+const clinicAppId = "donna-jean-hair-clinic"; 
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// Global state to hold leads for export
+let currentLeads = [];
+
+// Export function
+window.exportToCSV = () => {
+    if (currentLeads.length === 0) {
+        alert("No inquiries available to export.");
+        return;
+    }
+
+    const headers = ["Full Name", "Email Address", "Date"];
+    const rows = currentLeads.map(l => [
+        `"${l.name || 'Anonymous'}"`,
+        `"${l.email || 'N/A'}"`,
+        `"${l.timestamp ? new Date(l.timestamp.seconds * 1000).toLocaleDateString() : 'N/A'}"`
+    ]);
+
+    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
     
-    <!-- Firebase SDK Imports -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp, query, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    link.setAttribute("href", url);
+    link.setAttribute("download", `DonnaJean_Leads_${new Date().toLocaleDateString()}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+};
 
-        // Firebase Configuration
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
-      // Global handler for deletion
 window.deleteLead = async (leadId) => {
     if (!confirm("Are you sure you want to remove this patient inquiry?")) return;
-    
     try {
-        const leadDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'leads', leadId);
-        await deleteDoc(leadDocRef);
+        await deleteDoc(doc(db, 'artifacts', clinicAppId, 'public', 'data', 'leads', leadId));
     } catch (error) {
         console.error("Error deleting lead:", error);
     }
 };
 
-// MANDATORY RULE 3: Auth BEFORE Queries
 const initAuth = async () => {
     try {
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-            await signInWithCustomToken(auth, __initial_auth_token);
-        } else {
-            await signInAnonymously(auth);
-        }
+        await signInAnonymously(auth);
     } catch (error) {
         console.error("Auth failed:", error);
-        const leadsList = document.getElementById('leads-list');
-        if (leadsList) leadsList.innerHTML = `<tr><td colspan="4" class="py-10 text-center text-red-400">Connection Error: Please verify Firebase configuration.</td></tr>`;
     }
 };
 
@@ -55,52 +81,40 @@ initAuth();
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        setupLeadListener(user, db, appId);
+        const leadsRef = collection(db, 'artifacts', clinicAppId, 'public', 'data', 'leads');
+        onSnapshot(leadsRef, (snapshot) => {
+            const leadsList = document.getElementById('leads-list');
+            const leadCount = document.getElementById('lead-count');
+            
+            currentLeads = [];
+            snapshot.forEach(doc => currentLeads.push({ id: doc.id, ...doc.data() }));
+            currentLeads.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+
+            leadCount.innerText = currentLeads.length;
+            
+            if (currentLeads.length === 0) {
+                leadsList.innerHTML = `<tr><td colspan="4" class="py-12 text-center text-legacyNavy/30 italic text-[10px] uppercase">No active inquiries</td></tr>`;
+                return;
+            }
+
+            leadsList.innerHTML = currentLeads.map(lead => `
+                <tr class="border-b border-legacyNavy/5 hover:bg-warmWhite transition-colors">
+                    <td class="py-4 px-6 text-sm font-medium text-legacyNavy">${lead.name || 'Anonymous'}</td>
+                    <td class="py-4 px-6 text-sm text-legacyNavy/70">${lead.email || 'No Email'}</td>
+                    <td class="py-4 px-6 text-xs text-legacyNavy/40">
+                        ${lead.timestamp ? new Date(lead.timestamp.seconds * 1000).toLocaleDateString() : 'Just now'}
+                    </td>
+                    <td class="py-4 px-6 text-right">
+                        <button onclick="window.deleteLead('${lead.id}')" class="text-[10px] font-bold text-red-400 hover:text-red-600 transition-colors uppercase tracking-widest">
+                            Remove
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        });
     }
 });
-
-const setupLeadListener = (user, db, appId) => {
-    // MANDATORY RULE 1: Strict Paths
-    const leadsRef = collection(db, 'artifacts', appId, 'public', 'data', 'leads');
-    
-    onSnapshot(leadsRef, (snapshot) => {
-        const leadsList = document.getElementById('leads-list');
-        const leadCount = document.getElementById('lead-count');
-        if (!leadsList) return;
-
-        const leads = [];
-        snapshot.forEach(doc => leads.push({ id: doc.id, ...doc.data() }));
-        
-        // MANDATORY RULE 2: Sort in memory
-        leads.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
-
-        leadCount.innerText = leads.length;
-        
-        if (leads.length === 0) {
-            leadsList.innerHTML = `<tr><td colspan="4" class="py-12 text-center text-legacyNavy/30 italic uppercase tracking-widest text-[10px]">No active inquiries</td></tr>`;
-            return;
-        }
-
-        leadsList.innerHTML = leads.map(lead => `
-            <tr class="border-b border-legacyNavy/5 hover:bg-warmWhite transition-colors">
-                <td class="py-4 px-6 text-sm font-medium text-legacyNavy">${lead.name || 'Anonymous'}</td>
-                <td class="py-4 px-6 text-sm text-legacyNavy/70">${lead.email || 'No Email'}</td>
-                <td class="py-4 px-6 text-xs text-legacyNavy/40">
-                    ${lead.timestamp ? new Date(lead.timestamp.seconds * 1000).toLocaleDateString() : 'Pending'}
-                </td>
-                <td class="py-4 px-6 text-right">
-                    <button onclick="window.deleteLead('${lead.id}')" class="text-[10px] font-bold text-red-400 hover:text-red-600 transition-colors uppercase tracking-widest">
-                        Remove
-                    </button>
-                </td>
-            </tr>
-        `).join('');
-    }, (error) => {
-        console.error("Dashboard Listener Error:", error);
-    });
-};
-        <script>
-    
+   <script> 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script>
@@ -623,14 +637,19 @@ const setupLeadListener = (user, db, appId) => {
     <div class="max-w-7xl mx-auto px-6">
         <div class="flex justify-between items-center mb-12 border-b border-white/10 pb-8">
             <div>
-                <h2 class="font-serif text-4xl italic">Admin Lead Dashboard</h2>
+                <h2 class="font-serif text-4xl italic text-white">Admin Lead Dashboard</h2>
                 <p class="text-xs text-champagneGold uppercase tracking-widest mt-2">
                     Patient Inquiry Pipeline | <span id="lead-count">0</span> New Leads
                 </p>
             </div>
-            <button onclick="toggleDashboard()" class="text-[10px] uppercase tracking-widest font-bold border border-white/20 px-6 py-2 rounded-full hover:bg-white/10 transition-all">
-                Close Dashboard
-            </button>
+            <div class="flex gap-4">
+                <button onclick="window.exportToCSV()" class="text-[10px] uppercase tracking-widest font-bold bg-champagneGold text-white px-6 py-2 rounded-full hover:bg-white hover:text-legacyNavy transition-all">
+                    Export to CSV (for Google Docs)
+                </button>
+                <button onclick="toggleDashboard()" class="text-[10px] uppercase tracking-widest font-bold border border-white/20 px-6 py-2 rounded-full hover:bg-white/10 transition-all">
+                    Close Dashboard
+                </button>
+            </div>
         </div>
         
         <div class="bg-white rounded-[2rem] overflow-hidden shadow-2xl">
@@ -645,7 +664,6 @@ const setupLeadListener = (user, db, appId) => {
                         </tr>
                     </thead>
                     <tbody id="leads-list" class="text-legacyNavy">
-                        <!-- Dynamic Leads Content -->
                         <tr>
                             <td colspan="4" class="py-20 text-center text-legacyNavy/30 italic">Authenticating clinical data...</td>
                         </tr>
@@ -655,7 +673,6 @@ const setupLeadListener = (user, db, appId) => {
         </div>
     </div>
 </section>
-
 
     <!-- Footer -->
     <footer class="bg-warmWhite pt-40 pb-16 border-t border-legacyNavy/5">
