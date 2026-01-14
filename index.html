@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> 
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- SEO Primary Metadata -->
@@ -10,121 +10,159 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-<script type="module">   
-  // Import the functions you need from the SDKs you need
-import { initializeApp } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js)";
-import { getAuth, signInAnonymously, onAuthStateChanged } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js)";
-import { getFirestore, collection, onSnapshot, doc, deleteDoc } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js)";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyATRxzz8UDGCYnuUWJlI74fu-L3Jjbukb0",
-    authDomain: "the-donna-jean-clinic.firebaseapp.com",
-    projectId: "the-donna-jean-clinic",
-    storageBucket: "the-donna-jean-clinic.firebasestorage.app",
-    messagingSenderId: "714647156846",
-    appId: "1:714647156846:web:ca9f59b444f8f8d9cf0e7f",
-    measurementId: "G-KQMGEW2Y2H"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-
-const clinicAppId = "donna-jean-hair-clinic"; 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-// Global state to hold leads for export
-let currentLeads = [];
-
-// Export function
-window.exportToCSV = () => {
-    if (currentLeads.length === 0) {
-        alert("No inquiries available to export.");
-        return;
-    }
-
-    const headers = ["Full Name", "Email Address", "Date"];
-    const rows = currentLeads.map(l => [
-        `"${l.name || 'Anonymous'}"`,
-        `"${l.email || 'N/A'}"`,
-        `"${l.timestamp ? new Date(l.timestamp.seconds * 1000).toLocaleDateString() : 'N/A'}"`
-    ]);
-
-    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
     
-    link.setAttribute("href", url);
-    link.setAttribute("download", `DonnaJean_Leads_${new Date().toLocaleDateString()}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-};
+    <!-- Firebase SDK Imports -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, query, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-window.deleteLead = async (leadId) => {
-    if (!confirm("Are you sure you want to remove this patient inquiry?")) return;
-    try {
-        await deleteDoc(doc(db, 'artifacts', clinicAppId, 'public', 'data', 'leads', leadId));
-    } catch (error) {
-        console.error("Error deleting lead:", error);
-    }
-};
+        // Firebase Configuration (Standard Canvas Environment Variables)
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
-const initAuth = async () => {
-    try {
-        await signInAnonymously(auth);
-    } catch (error) {
-        console.error("Auth failed:", error);
-    }
-};
+        let currentUser = null;
+        let currentLeads = []; // For Exporting
 
-initAuth();
+        // --- AUTHENTICATION (RULE 3) ---
+        const initAuth = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Auth failed:", error);
+            }
+        };
+        initAuth();
 
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        const leadsRef = collection(db, 'artifacts', clinicAppId, 'public', 'data', 'leads');
-        onSnapshot(leadsRef, (snapshot) => {
-            const leadsList = document.getElementById('leads-list');
-            const leadCount = document.getElementById('lead-count');
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (user) {
+                setupLeadListener();
+            }
+        });
+
+        // --- DASHBOARD LISTENER (RULE 1 & 2) ---
+        const setupLeadListener = () => {
+            if (!currentUser) return;
+            // Strict path structure
+            const leadsRef = collection(db, 'artifacts', appId, 'public', 'data', 'leads');
             
-            currentLeads = [];
-            snapshot.forEach(doc => currentLeads.push({ id: doc.id, ...doc.data() }));
-            currentLeads.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+            onSnapshot(leadsRef, (snapshot) => {
+                const leadsList = document.getElementById('leads-list');
+                const leadCount = document.getElementById('lead-count');
+                if (!leadsList) return;
 
-            leadCount.innerText = currentLeads.length;
-            
+                currentLeads = [];
+                snapshot.forEach(doc => currentLeads.push({ id: doc.id, ...doc.data() }));
+                
+                // Sort by timestamp in memory (Rule 2)
+                currentLeads.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+
+                leadCount.innerText = currentLeads.length;
+                
+                if (currentLeads.length === 0) {
+                    leadsList.innerHTML = `<tr><td colspan="4" class="py-20 text-center text-legacyNavy/30 italic uppercase tracking-widest text-[10px]">No active inquiries</td></tr>`;
+                    return;
+                }
+
+                leadsList.innerHTML = currentLeads.map(lead => `
+                    <tr class="border-b border-legacyNavy/5 hover:bg-warmWhite transition-colors">
+                        <td class="py-4 px-6 text-sm font-medium text-legacyNavy">${lead.name || 'Anonymous'}</td>
+                        <td class="py-4 px-6 text-sm text-legacyNavy/70">${lead.email || 'No Email'}</td>
+                        <td class="py-4 px-6 text-xs text-legacyNavy/40">
+                            ${lead.timestamp ? new Date(lead.timestamp.seconds * 1000).toLocaleDateString() : 'Pending'}
+                        </td>
+                        <td class="py-4 px-6 text-right">
+                            <button onclick="window.deleteLead('${lead.id}')" class="text-[10px] font-bold text-red-400 hover:text-red-600 transition-colors uppercase tracking-widest">
+                                Remove
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }, (error) => {
+                console.error("Firestore Listener Error:", error);
+            });
+        };
+
+        // --- EXPORT FUNCTION ---
+        window.exportToCSV = () => {
             if (currentLeads.length === 0) {
-                leadsList.innerHTML = `<tr><td colspan="4" class="py-12 text-center text-legacyNavy/30 italic text-[10px] uppercase">No active inquiries</td></tr>`;
+                alert("No inquiries available to export.");
+                return;
+            }
+            const headers = ["Full Name", "Email Address", "Inquiry Date"];
+            const rows = currentLeads.map(l => [
+                `"${l.name || 'Anonymous'}"`,
+                `"${l.email || 'N/A'}"`,
+                `"${l.timestamp ? new Date(l.timestamp.seconds * 1000).toLocaleDateString() : 'Pending'}"`
+            ]);
+            const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.setAttribute("href", URL.createObjectURL(blob));
+            link.setAttribute("download", `DonnaJean_Leads_${new Date().toLocaleDateString()}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        // --- DELETE FUNCTION ---
+        window.deleteLead = async (leadId) => {
+            if (!confirm("Are you sure you want to remove this inquiry?")) return;
+            try {
+                const leadDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'leads', leadId);
+                await deleteDoc(leadDocRef);
+            } catch (error) {
+                console.error("Error deleting lead:", error);
+            }
+        };
+
+        // --- SAVE LEAD DATA ---
+        window.saveLeadData = async (event) => {
+            event.preventDefault();
+            const btn = document.getElementById('contact-btn');
+            const successMsg = document.getElementById('success-msg');
+            const form = event.target;
+
+            if (!currentUser) {
+                alert("Connection initializing. Please try again in a moment.");
                 return;
             }
 
-            leadsList.innerHTML = currentLeads.map(lead => `
-                <tr class="border-b border-legacyNavy/5 hover:bg-warmWhite transition-colors">
-                    <td class="py-4 px-6 text-sm font-medium text-legacyNavy">${lead.name || 'Anonymous'}</td>
-                    <td class="py-4 px-6 text-sm text-legacyNavy/70">${lead.email || 'No Email'}</td>
-                    <td class="py-4 px-6 text-xs text-legacyNavy/40">
-                        ${lead.timestamp ? new Date(lead.timestamp.seconds * 1000).toLocaleDateString() : 'Just now'}
-                    </td>
-                    <td class="py-4 px-6 text-right">
-                        <button onclick="window.deleteLead('${lead.id}')" class="text-[10px] font-bold text-red-400 hover:text-red-600 transition-colors uppercase tracking-widest">
-                            Remove
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        });
-    }
-});
-   <script> 
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loader"></span> SENDING...';
+
+            const leadData = {
+                name: form.elements['name'].value,
+                email: form.elements['email'].value,
+                timestamp: serverTimestamp()
+            };
+
+            try {
+                const leadsRef = collection(db, 'artifacts', appId, 'public', 'data', 'leads');
+                await addDoc(leadsRef, leadData);
+                
+                form.style.opacity = '0.2';
+                form.style.pointerEvents = 'none';
+                successMsg.classList.remove('hidden');
+                btn.innerHTML = 'SENT';
+                form.reset();
+            } catch (error) {
+                console.error("Error saving lead:", error);
+                alert("Submission failed. Please check your internet connection.");
+                btn.disabled = false;
+                btn.innerHTML = 'SEND LOVE LETTER';
+            }
+        };
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script>
