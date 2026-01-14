@@ -464,6 +464,7 @@
                 </div>
             </div>
         </div>
+        
    <!-- The Restoration Journey Section -->
     <section id="journey" class="py-24 bg-warmWhite linen-texture overflow-hidden">
         <div class="max-w-7xl mx-auto px-6">
@@ -656,7 +657,6 @@
         </div>
     </section>
 
-
     <!-- Capturing Leads -->
     <section id="contact" class="py-24 relative z-40">
         <div class="max-w-5xl mx-auto px-6 bg-white rounded-[4rem] shadow-2xl p-16 relative -mt-32">
@@ -758,22 +758,6 @@
                     retries++;
                 }
             }
-        }
-
-        async function findRitualPath() {
-            const input = document.getElementById('pathfinder-input');
-            const btn = document.getElementById('pathfinder-btn');
-            const resultDiv = document.getElementById('pathfinder-result');
-            const text = input.value.trim();
-            if (!text) return;
-            btn.disabled = true;
-            btn.innerHTML = '<span class="loader"></span>';
-            try {
-                const systemPrompt = "Analyze this hair restoration situation and recommend if they need: The Compassionate Consultation (starting out), Custom Design (ready to buy), or Recovery (maintenance). Keep it under 2 warm sentences.";
-                const response = await fetchGemini({ contents: [{ parts: [{ text: text }] }], systemInstruction: { parts: [{ text: systemPrompt }] } });
-                resultDiv.innerText = response;
-                resultDiv.classList.remove('hidden');
-            } catch (e) { console.error(e); } finally { btn.disabled = false; btn.innerText = '✨ Find My Ritual'; }
         }
 
         function toggleDashboard() {
