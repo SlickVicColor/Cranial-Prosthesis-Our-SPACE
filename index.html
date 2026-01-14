@@ -656,12 +656,13 @@
         </div>
     </section>
 
-   <!-- Capturing Leads Securely -->
+
+    <!-- Capturing Leads -->
     <section id="contact" class="py-24 relative z-40">
         <div class="max-w-5xl mx-auto px-6 bg-white rounded-[4rem] shadow-2xl p-16 relative -mt-32">
             <div class="text-center mb-16">
                 <h2 class="font-serif text-5xl mb-4 italic">Request Your Discovery Session</h2>
-                <p class="text-legacyNavy/50 font-light">A private sanctuary in Arlington awaits you.</p>
+                <p class="text-legacyNavy/50 font-light italic">A private sanctuary in Arlington awaits you.</p>
             </div>
             <form class="grid md:grid-cols-2 gap-10" onsubmit="window.saveLeadData(event)">
                 <div class="space-y-2">
@@ -680,47 +681,39 @@
         </div>
     </section>
 
-<!-- ✨ ADMIN LEAD DASHBOARD ✨ -->
-<section id="admin-dashboard" class="hidden py-24 bg-legacyNavy text-white linen-texture">
-    <div class="max-w-7xl mx-auto px-6">
-        <div class="flex justify-between items-center mb-12 border-b border-white/10 pb-8">
-            <div>
-                <h2 class="font-serif text-4xl italic text-white">Admin Lead Dashboard</h2>
-                <p class="text-xs text-champagneGold uppercase tracking-widest mt-2">
-                    Patient Inquiry Pipeline | <span id="lead-count">0</span> New Leads
-                </p>
+    <!-- ✨ ADMIN DASHBOARD ✨ -->
+    <section id="admin-dashboard" class="hidden py-24 bg-legacyNavy text-white linen-texture">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-12 border-b border-white/10 pb-8 gap-8">
+                <div>
+                    <h2 class="font-serif text-4xl italic">Admin Lead Dashboard</h2>
+                    <p class="text-xs text-champagneGold uppercase tracking-widest mt-2">Patient Inquiry Pipeline | <span id="lead-count">0</span> New Leads</p>
+                </div>
+                <div class="flex gap-4">
+                    <button onclick="window.exportToCSV()" class="text-[10px] uppercase tracking-widest font-bold bg-champagneGold text-white px-6 py-2 rounded-full hover:bg-white hover:text-legacyNavy transition-all">Export to CSV</button>
+                    <button onclick="toggleDashboard()" class="text-[10px] uppercase tracking-widest font-bold border border-white/20 px-6 py-2 rounded-full hover:bg-white/10 transition-all">Close Dashboard</button>
+                </div>
             </div>
-            <div class="flex gap-4">
-                <button onclick="window.exportToCSV()" class="text-[10px] uppercase tracking-widest font-bold bg-champagneGold text-white px-6 py-2 rounded-full hover:bg-white hover:text-legacyNavy transition-all">
-                    Export to CSV (for Google Docs)
-                </button>
-                <button onclick="toggleDashboard()" class="text-[10px] uppercase tracking-widest font-bold border border-white/20 px-6 py-2 rounded-full hover:bg-white/10 transition-all">
-                    Close Dashboard
-                </button>
-            </div>
-        </div>
-        
-        <div class="bg-white rounded-[2rem] overflow-hidden shadow-2xl">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left">
-                    <thead class="bg-warmWhite text-legacyNavy border-b border-legacyNavy/10">
-                        <tr>
-                            <th class="py-4 px-6 text-[10px] uppercase tracking-[0.2em] font-bold">Full Name</th>
-                            <th class="py-4 px-6 text-[10px] uppercase tracking-[0.2em] font-bold">Email Address</th>
-                            <th class="py-4 px-6 text-[10px] uppercase tracking-[0.2em] font-bold">Inquiry Date</th>
-                            <th class="py-4 px-6 text-[10px] uppercase tracking-[0.2em] font-bold text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leads-list" class="text-legacyNavy">
-                        <tr>
-                            <td colspan="4" class="py-20 text-center text-legacyNavy/30 italic">Authenticating clinical data...</td>
-                        </tr>
-                    </tbody>
-                </table>
+            
+            <div class="bg-white rounded-[2rem] overflow-hidden shadow-2xl">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-warmWhite text-legacyNavy border-b border-legacyNavy/10">
+                            <tr>
+                                <th class="py-4 px-6 text-[10px] uppercase tracking-[0.2em] font-bold">Full Name</th>
+                                <th class="py-4 px-6 text-[10px] uppercase tracking-[0.2em] font-bold">Email Address</th>
+                                <th class="py-4 px-6 text-[10px] uppercase tracking-[0.2em] font-bold">Date</th>
+                                <th class="py-4 px-6 text-[10px] uppercase tracking-[0.2em] font-bold text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leads-list" class="text-legacyNavy">
+                            <tr><td colspan="4" class="py-20 text-center text-legacyNavy/30 italic">Initialising secure connection...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
     <!-- Footer -->
     <footer class="bg-warmWhite pt-40 pb-16 border-t border-legacyNavy/5">
