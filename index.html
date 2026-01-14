@@ -15,9 +15,9 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, query, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase Configuration (provided by environment)
+        // Firebase Configuration
         const firebaseConfig = JSON.parse(__firebase_config);
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -38,7 +38,41 @@
 
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
+            if (user) {
+                setupLeadListener();
+            }
         });
+
+        // Listen for leads in real-time for the Dashboard
+        const setupLeadListener = () => {
+            if (!currentUser) return;
+            const leadsRef = collection(db, 'artifacts', appId, 'public', 'data', 'leads');
+            
+            onSnapshot(leadsRef, (snapshot) => {
+                const leadsList = document.getElementById('leads-list');
+                const leadCount = document.getElementById('lead-count');
+                if (!leadsList) return;
+
+                const leads = [];
+                snapshot.forEach(doc => leads.push({ id: doc.id, ...doc.data() }));
+                
+                // Sort by timestamp in memory (Rule 2)
+                leads.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+
+                leadCount.innerText = leads.length;
+                leadsList.innerHTML = leads.map(lead => `
+                    <tr class="border-b border-legacyNavy/5 hover:bg-warmWhite transition-colors">
+                        <td class="py-4 px-4 text-sm font-medium text-legacyNavy">${lead.name || 'Anonymous'}</td>
+                        <td class="py-4 px-4 text-sm text-legacyNavy/70">${lead.email || 'No Email'}</td>
+                        <td class="py-4 px-4 text-xs text-legacyNavy/40">
+                            ${lead.timestamp ? new Date(lead.timestamp.seconds * 1000).toLocaleDateString() : 'Pending'}
+                        </td>
+                    </tr>
+                `).join('');
+            }, (error) => {
+                console.error("Error fetching leads:", error);
+            });
+        };
 
         // Global function to save lead data
         window.saveLeadData = async (event) => {
@@ -62,7 +96,6 @@
             };
 
             try {
-                // Rule 1: Strict Paths - Saving to public leads collection
                 const leadsRef = collection(db, 'artifacts', appId, 'public', 'data', 'leads');
                 await addDoc(leadsRef, leadData);
                 
@@ -70,6 +103,7 @@
                 form.style.pointerEvents = 'none';
                 successMsg.classList.remove('hidden');
                 btn.innerHTML = 'SENT';
+                form.reset();
             } catch (error) {
                 console.error("Error saving lead:", error);
                 alert("There was an error sending your message. Please try again.");
@@ -596,8 +630,37 @@
             <div id="success-msg" class="hidden mt-10 p-6 bg-sageEucalyptus/10 text-sageEucalyptus text-center rounded-[2rem] font-serif italic text-xl">Thank you. Your request is safely in our care. We will reach out with discretion soon.</div>
         </div>
     </section>
-
-
+   
+        <!-- ✨ ADMIN LEAD DASHBOARD ✨ -->
+    <section id="admin-dashboard" class="hidden py-24 bg-legacyNavy text-white linen-texture">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-between items-center mb-12 border-b border-white/10 pb-8">
+                <div>
+                    <h2 class="font-serif text-4xl italic">Admin Lead Dashboard</h2>
+                    <p class="text-xs text-champagneGold uppercase tracking-widest mt-2">Patient Inquiry Pipeline | <span id="lead-count">0</span> New Leads</p>
+                </div>
+                <button onclick="toggleDashboard()" class="text-[10px] uppercase tracking-widest font-bold border border-white/20 px-6 py-2 rounded-full hover:bg-white/10 transition-all">Close Dashboard</button>
+            </div>
+            
+            <div class="bg-white rounded-[2rem] overflow-hidden shadow-2xl">
+                <table class="w-full text-left">
+                    <thead class="bg-warmWhite text-legacyNavy border-b border-legacyNavy/10">
+                        <tr>
+                            <th class="py-4 px-6 text-[10px] uppercase tracking-[0.2em] font-bold">Full Name</th>
+                            <th class="py-4 px-6 text-[10px] uppercase tracking-[0.2em] font-bold">Email Address</th>
+                            <th class="py-4 px-6 text-[10px] uppercase tracking-[0.2em] font-bold">Inquiry Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leads-list" class="text-legacyNavy">
+                        <!-- Dynamic Leads Content -->
+                        <tr>
+                            <td colspan="3" class="py-20 text-center text-legacyNavy/30 italic">Authenticating clinical data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
     <!-- Footer -->
     <footer class="bg-warmWhite pt-40 pb-16 border-t border-legacyNavy/5">
         <div class="max-w-7xl mx-auto px-6 text-center md:text-left">
