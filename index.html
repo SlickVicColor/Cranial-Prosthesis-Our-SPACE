@@ -170,6 +170,81 @@ const setupLeadListener = (user, db, appId) => {
         console.error("Dashboard Listener Error:", error);
     });
 };
+// Global handler for deletion
+window.deleteLead = async (leadId) => {
+    if (!confirm("Are you sure you want to remove this patient inquiry?")) return;
+    
+    try {
+        const leadDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'leads', leadId);
+        await deleteDoc(leadDocRef);
+    } catch (error) {
+        console.error("Error deleting lead:", error);
+    }
+};
+
+// MANDATORY RULE 3: Auth BEFORE Queries
+const initAuth = async () => {
+    try {
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+            await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+            await signInAnonymously(auth);
+        }
+    } catch (error) {
+        console.error("Auth failed:", error);
+        const leadsList = document.getElementById('leads-list');
+        if (leadsList) leadsList.innerHTML = `<tr><td colspan="4" class="py-10 text-center text-red-400">Connection Error: Please verify Firebase configuration.</td></tr>`;
+    }
+};
+
+initAuth();
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        setupLeadListener(user, db, appId);
+    }
+});
+
+const setupLeadListener = (user, db, appId) => {
+    // MANDATORY RULE 1: Strict Paths
+    const leadsRef = collection(db, 'artifacts', appId, 'public', 'data', 'leads');
+    
+    onSnapshot(leadsRef, (snapshot) => {
+        const leadsList = document.getElementById('leads-list');
+        const leadCount = document.getElementById('lead-count');
+        if (!leadsList) return;
+
+        const leads = [];
+        snapshot.forEach(doc => leads.push({ id: doc.id, ...doc.data() }));
+        
+        // MANDATORY RULE 2: Sort in memory
+        leads.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+
+        leadCount.innerText = leads.length;
+        
+        if (leads.length === 0) {
+            leadsList.innerHTML = `<tr><td colspan="4" class="py-12 text-center text-legacyNavy/30 italic uppercase tracking-widest text-[10px]">No active inquiries</td></tr>`;
+            return;
+        }
+
+        leadsList.innerHTML = leads.map(lead => `
+            <tr class="border-b border-legacyNavy/5 hover:bg-warmWhite transition-colors">
+                <td class="py-4 px-6 text-sm font-medium text-legacyNavy">${lead.name || 'Anonymous'}</td>
+                <td class="py-4 px-6 text-sm text-legacyNavy/70">${lead.email || 'No Email'}</td>
+                <td class="py-4 px-6 text-xs text-legacyNavy/40">
+                    ${lead.timestamp ? new Date(lead.timestamp.seconds * 1000).toLocaleDateString() : 'Pending'}
+                </td>
+                <td class="py-4 px-6 text-right">
+                    <button onclick="window.deleteLead('${lead.id}')" class="text-[10px] font-bold text-red-400 hover:text-red-600 transition-colors uppercase tracking-widest">
+                        Remove
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    }, (error) => {
+        console.error("Dashboard Listener Error:", error);
+    });
+};
 <script>
     
     <script src="https://cdn.tailwindcss.com"></script>
