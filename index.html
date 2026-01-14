@@ -82,7 +82,6 @@
             <div class="hidden lg:flex items-center space-x-8 text-sm font-medium tracking-wide">
                 <a href="#story" class="hover:text-champagneGold transition-colors">OUR STORY</a>
                 <a href="#journey" class="hover:text-champagneGold transition-colors">YOUR RESTORATION JOURNEY</a>
-                <a href="#ai-tools" class="hover:text-champagneGold transition-colors">✨ AI TOOLS</a>
                 <a href="#difference" class="hover:text-champagneGold transition-colors">THE SCIENCE</a>
                 <a href="#collection" class="hover:text-champagneGold transition-colors">THE COLLECTION</a>
                 <a href="#referrals" class="hover:text-champagneGold transition-colors">MEDICAL REFERRALS</a>
@@ -104,7 +103,6 @@
         <div id="mobile-menu" class="hidden lg:hidden bg-warmWhite border-b border-legacyNavy/10 px-6 py-6 space-y-4">
             <a href="#story" class="block text-sm font-medium">OUR STORY</a>
             <a href="#journey" class="block text-sm font-medium">YOUR RESTORATION JOURNEY</a>
-            <a href="#ai-tools" class="block text-sm font-medium">✨ AI TOOLS</a>
             <a href="#difference" class="block text-sm font-medium">THE SCIENCE</a>
             <a href="#collection" class="block text-sm font-medium">THE COLLECTION</a>
             <a href="#referrals" class="block text-sm font-medium">MEDICAL REFERRALS</a>
@@ -200,60 +198,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- ✨ AI SANCTUARY TOOLS SECTION -->
-    <section id="ai-tools" class="py-24 bg-legacyNavy text-warmWhite linen-texture relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-96 h-96 bg-champagneGold/5 rounded-full -mr-48 -mt-48 blur-3xl"></div>
-        <div class="max-w-7xl mx-auto px-6 relative z-10">
-            <div class="text-center mb-16">
-                <h2 class="font-serif text-4xl md:text-6xl mb-4 italic">✨ AI Sanctuary Tools</h2>
-                <p class="text-champagneGold font-medium tracking-widest text-sm uppercase">Preliminary Insights Empowered by Gemini</p>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-12">
-                <!-- AI Identity Matcher -->
-                <div class="bg-white/5 border border-white/10 p-10 rounded-[3rem] backdrop-blur-sm">
-                    <h3 class="font-serif text-3xl mb-4 italic">✨ Identity Matcher</h3>
-                    <p class="text-sm text-white/70 mb-8 font-light leading-relaxed">Articulate your hair goals before your visit. We specialize in <strong>natural texture medical wigs</strong> and <strong>medical wigs for Black women</strong> navigating change.</p>
-                    
-                    <div id="chat-container" class="bg-warmWhite/5 rounded-2xl h-64 overflow-y-auto p-4 mb-4 border border-white/10 space-y-4 text-sm font-light">
-                        <div class="text-champagneGold italic">"Welcome to the sanctuary. How would you describe the look you miss most?"</div>
-                    </div>
-                    
-                    <div class="flex gap-2">
-                        <input type="text" id="chat-input" class="flex-1 bg-white/10 border-none rounded-full px-6 py-3 text-sm outline-none focus:ring-1 focus:ring-champagneGold" placeholder="Tell us your goals...">
-                        <button onclick="handleIdentityChat()" id="chat-btn" class="bg-champagneGold text-white px-6 py-3 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-white hover:text-legacyNavy transition-all">
-                            ✨ Consult
-                        </button>
-                    </div>
-                </div>
-
-                <!-- AI Scalp Insight -->
-                <div class="bg-white/5 border border-white/10 p-10 rounded-[3rem] backdrop-blur-sm">
-                    <h3 class="font-serif text-3xl mb-4 italic">✨ Scalp Health Insight</h3>
-                    <p class="text-sm text-white/70 mb-8 font-light leading-relaxed">Upload a clear photo to prepare for your <strong>trichology-led scalp assessment</strong>. Our AI provides a summary to help Victor prioritize your scalp health.</p>
-                    
-                    <div class="space-y-6">
-                        <div class="relative group cursor-pointer border-2 border-dashed border-white/20 rounded-2xl p-8 text-center hover:border-champagneGold transition-all" onclick="document.getElementById('scalp-upload').click()">
-                            <input type="file" id="scalp-upload" class="hidden" accept="image/*" onchange="previewScalpImage(event)">
-                            <div id="upload-placeholder">
-                                <svg class="w-12 h-12 text-champagneGold/40 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-width="1"/></svg>
-                                <span class="text-xs font-bold tracking-widest uppercase">Upload photo</span>
-                            </div>
-                            <img id="scalp-preview" class="hidden w-full h-48 object-cover rounded-xl" alt="Scalp health preview">
-                        </div>
-                        
-                        <button onclick="analyzeScalp()" id="analyze-btn" class="w-full bg-white text-legacyNavy py-4 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-champagneGold hover:text-white transition-all">
-                            ✨ Analyze Photo
-                        </button>
-
-                        <div id="analysis-result" class="hidden p-6 bg-white/5 border border-white/10 rounded-2xl text-sm font-light leading-relaxed"></div>
-                    </div>
-                </div>
-            </div>
-            <p class="text-[10px] text-center mt-12 opacity-40 uppercase tracking-[0.3em]">AI features are for preparation only and do not replace professional medical diagnosis.</p>
         </div>
     </section>
 
