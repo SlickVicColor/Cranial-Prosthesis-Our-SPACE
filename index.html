@@ -10,6 +10,77 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK Imports -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Configuration (provided by environment)
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        let currentUser = null;
+
+        // Initialize Anonymous Auth
+        const initAuth = async () => {
+            try {
+                await signInAnonymously(auth);
+            } catch (error) {
+                console.error("Auth failed:", error);
+            }
+        };
+        initAuth();
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+        });
+
+        // Global function to save lead data
+        window.saveLeadData = async (event) => {
+            event.preventDefault();
+            const btn = document.getElementById('contact-btn');
+            const successMsg = document.getElementById('success-msg');
+            const form = event.target;
+
+            if (!currentUser) {
+                alert("Authentication is processing. Please try again in a moment.");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loader"></span> SENDING...';
+
+            const leadData = {
+                name: form.elements['name'].value,
+                email: form.elements['email'].value,
+                timestamp: serverTimestamp()
+            };
+
+            try {
+                // Rule 1: Strict Paths - Saving to public leads collection
+                const leadsRef = collection(db, 'artifacts', appId, 'public', 'data', 'leads');
+                await addDoc(leadsRef, leadData);
+                
+                form.style.opacity = '0.2';
+                form.style.pointerEvents = 'none';
+                successMsg.classList.remove('hidden');
+                btn.innerHTML = 'SENT';
+            } catch (error) {
+                console.error("Error saving lead:", error);
+                alert("There was an error sending your message. Please try again.");
+                btn.disabled = false;
+                btn.innerHTML = 'SEND LOVE LETTER';
+            }
+        };
+    </script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -501,30 +572,31 @@
         </div>
     </section>
 
-    <!-- Contact Section -->
+<!-- Capturing Leads Securely -->
     <section id="contact" class="py-24 relative z-40">
         <div class="max-w-5xl mx-auto px-6 bg-white rounded-[4rem] shadow-2xl p-16 relative -mt-32">
             <div class="text-center mb-16">
                 <h2 class="font-serif text-5xl mb-4 italic">Request Your Discovery Session</h2>
-                <p class="text-legacyNavy/50 font-light">A private sanctuary for chemotherapy-induced alopecia care in Arlington.</p>
+                <p class="text-legacyNavy/50 font-light">A private sanctuary in Arlington awaits you.</p>
             </div>
-            
-            <form class="grid md:grid-cols-2 gap-10" onsubmit="event.preventDefault(); showMessage();">
+            <!-- Backend Integration Points to saveLeadData -->
+            <form class="grid md:grid-cols-2 gap-10" onsubmit="window.saveLeadData(event)">
                 <div class="space-y-2">
                     <label class="text-[10px] uppercase tracking-[0.3em] font-bold text-legacyNavy/30 ml-4">Full Name</label>
-                    <input type="text" class="w-full bg-warmWhite border-none rounded-full px-8 py-5 focus:ring-2 focus:ring-champagneGold" placeholder="Name">
+                    <input name="name" type="text" required class="w-full bg-warmWhite border-none rounded-full px-8 py-5 focus:ring-2 focus:ring-champagneGold outline-none" placeholder="Name">
                 </div>
                 <div class="space-y-2">
                     <label class="text-[10px] uppercase tracking-[0.3em] font-bold text-legacyNavy/30 ml-4">Email Address</label>
-                    <input type="email" class="w-full bg-warmWhite border-none rounded-full px-8 py-5 focus:ring-2 focus:ring-champagneGold" placeholder="Email">
+                    <input name="email" type="email" required class="w-full bg-warmWhite border-none rounded-full px-8 py-5 focus:ring-2 focus:ring-champagneGold outline-none" placeholder="Email">
                 </div>
                 <div class="md:col-span-2">
-                    <button type="submit" class="w-full bg-legacyNavy text-white py-6 rounded-full text-xs font-bold tracking-[0.4em] hover:bg-champagneGold transition-all shadow-xl uppercase">Send Love Letter</button>
+                    <button id="contact-btn" type="submit" class="w-full bg-legacyNavy text-white py-6 rounded-full text-xs font-bold tracking-[0.4em] hover:bg-champagneGold transition-all shadow-xl uppercase">Send Love Letter</button>
                 </div>
             </form>
-            <div id="success-msg" class="hidden mt-10 p-6 bg-sageEucalyptus/10 text-sageEucalyptus text-center rounded-[2rem] font-serif italic text-xl">Thank you. We will reach out with discretion soon.</div>
+            <div id="success-msg" class="hidden mt-10 p-6 bg-sageEucalyptus/10 text-sageEucalyptus text-center rounded-[2rem] font-serif italic text-xl">Thank you. Your request is safely in our care. We will reach out with discretion soon.</div>
         </div>
     </section>
+
 
     <!-- Footer -->
     <footer class="bg-warmWhite pt-40 pb-16 border-t border-legacyNavy/5">
@@ -547,7 +619,50 @@
         </div>
     </footer>
 
-    
+
+    <script>
+        // Placeholder for Gemini API Logic (already updated in previous turns)
+        const apiKey = "";
+        
+        async function fetchGemini(payload) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            let retries = 0;
+            const maxRetries = 5;
+            while (retries <= maxRetries) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) throw new Error('API Error');
+                    const data = await response.json();
+                    return data.candidates?.[0]?.content?.parts?.[0]?.text;
+                } catch (error) {
+                    if (retries === maxRetries) throw error;
+                    await new Promise(res => setTimeout(res, Math.pow(2, retries) * 1000));
+                    retries++;
+                }
+            }
+        }
+
+        async function findRitualPath() {
+            const input = document.getElementById('pathfinder-input');
+            const btn = document.getElementById('pathfinder-btn');
+            const resultDiv = document.getElementById('pathfinder-result');
+            const text = input.value.trim();
+            if (!text) return;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loader"></span>';
+            try {
+                const response = await fetchGemini({ contents: [{ parts: [{ text: text }] }], systemInstruction: { parts: [{ text: "Pathfinder prompt logic..." }] } });
+                resultDiv.innerText = response;
+                resultDiv.classList.remove('hidden');
+            } catch (e) { console.error(e); } finally { btn.disabled = false; btn.innerText = '✨ Find My Ritual'; }
+        }
+
+        // Other UI logic...
+        function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
     </script>
 </body>
 </html>
