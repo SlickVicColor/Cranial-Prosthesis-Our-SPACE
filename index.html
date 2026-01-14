@@ -630,36 +630,44 @@
         </div>
     </section>
 
-    <!-- ✨ ADMIN LEAD DASHBOARD ✨ -->
-    <section id="admin-dashboard" class="hidden py-24 bg-legacyNavy text-white linen-texture">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex justify-between items-center mb-12 border-b border-white/10 pb-8">
-                <div>
-                    <h2 class="font-serif text-4xl italic">Admin Lead Dashboard</h2>
-                    <p class="text-xs text-champagneGold uppercase tracking-widest mt-2">Patient Inquiry Pipeline | <span id="lead-count">0</span> New Leads</p>
-                </div>
-                <button onclick="toggleDashboard()" class="text-[10px] uppercase tracking-widest font-bold border border-white/20 px-6 py-2 rounded-full hover:bg-white/10 transition-all">Close Dashboard</button>
+<!-- ✨ ADMIN LEAD DASHBOARD ✨ -->
+<section id="admin-dashboard" class="hidden py-24 bg-legacyNavy text-white linen-texture">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="flex justify-between items-center mb-12 border-b border-white/10 pb-8">
+            <div>
+                <h2 class="font-serif text-4xl italic">Admin Lead Dashboard</h2>
+                <p class="text-xs text-champagneGold uppercase tracking-widest mt-2">
+                    Patient Inquiry Pipeline | <span id="lead-count">0</span> New Leads
+                </p>
             </div>
-            
-            <div class="bg-white rounded-[2rem] overflow-hidden shadow-2xl">
+            <button onclick="toggleDashboard()" class="text-[10px] uppercase tracking-widest font-bold border border-white/20 px-6 py-2 rounded-full hover:bg-white/10 transition-all">
+                Close Dashboard
+            </button>
+        </div>
+        
+        <div class="bg-white rounded-[2rem] overflow-hidden shadow-2xl">
+            <div class="overflow-x-auto">
                 <table class="w-full text-left">
                     <thead class="bg-warmWhite text-legacyNavy border-b border-legacyNavy/10">
                         <tr>
                             <th class="py-4 px-6 text-[10px] uppercase tracking-[0.2em] font-bold">Full Name</th>
                             <th class="py-4 px-6 text-[10px] uppercase tracking-[0.2em] font-bold">Email Address</th>
                             <th class="py-4 px-6 text-[10px] uppercase tracking-[0.2em] font-bold">Inquiry Date</th>
+                            <th class="py-4 px-6 text-[10px] uppercase tracking-[0.2em] font-bold text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="leads-list" class="text-legacyNavy">
                         <!-- Dynamic Leads Content -->
                         <tr>
-                            <td colspan="3" class="py-20 text-center text-legacyNavy/30 italic">Authenticating clinical data...</td>
+                            <td colspan="4" class="py-20 text-center text-legacyNavy/30 italic">Authenticating clinical data...</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+
 
     <!-- Footer -->
     <footer class="bg-warmWhite pt-40 pb-16 border-t border-legacyNavy/5">
@@ -670,13 +678,13 @@
                     <h4 class="font-serif text-3xl font-bold mt-1">The Donna Jean Hair Restoration Clinic</h4>
                 </div>
                 <div class="md:col-span-3 text-xs opacity-50 uppercase tracking-widest font-bold">
-                    HIPAA | NPI | CARECREDIT
+                    HIPAA | NPI (1346106044) | CARECREDIT
                 </div>
                 <div class="md:col-span-3 text-right">
                     <button onclick="toggleDashboard()" class="text-[10px] tracking-widest font-bold uppercase text-legacyNavy/20 hover:text-champagneGold transition-all">Admin Dashboard</button>
                 </div>
             </div>
-            <p class="text-[10px] uppercase tracking-[0.3em] text-legacyNavy/40 text-center">© 2024 Our S.P.A.C.E. Studios LLC. All Rights Reserved.</p>
+            <p class="text-[10px] uppercase tracking-[0.3em] text-legacyNavy/40 text-center">© 2026 Our S.P.A.C.E. Studios LLC. All Rights Reserved.</p>
         </div>
     </footer>
 
