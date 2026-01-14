@@ -3,342 +3,533 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our S.P.A.C.E. Studios | Medical Hair Restoration & Cranial Prosthetics Arlington</title>
-    <meta name="description" content="Custom medical hair systems and cranial prosthetics for oncology and alopecia patients in Arlington, VA. Licensed specialist providing trichology-led restoration.">
+    <!-- SEO Primary Metadata -->
+    <title>Medical-Grade Hair Restoration & Cranial Prostheses | Arlington, VA</title>
+    <meta name="description" content="Experience a private sanctuary for medical hair loss. The Donna Jean Clinic offers custom, sensory-safe hair systems and trichology care for oncology and alopecia patients in the DC Metro area. Reclaim your identity with a licensed medical cosmetologist.">
+    <meta name="keywords" content="Medical wigs for Black women, Certified Cranial Prosthesis Specialist, Sensory-safe hair systems, Trichology-led scalp assessment, Alopecia specialist Arlington VA, NPI Registered Hair Restoration, Custom cranial prosthesis oncology, Durable Medical Equipment Superbill, Natural texture medical wigs, Chemotherapy-induced alopecia care">
     
-    <!-- Tailwind for Styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- React & ReactDOM -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
-    <!-- Explicitly set globals for Lucide-React to pick up -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script>
-        window.React = React;
-        window.ReactDOM = ReactDOM;
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        legacyNavy: '#1B263B',
+                        champagneGold: '#C5A059',
+                        sageEucalyptus: '#87986A',
+                        warmWhite: '#F8F9F1',
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
     </script>
-    
-    <!-- Lucide React UMD CDN -->
-    <script src="https://unpkg.com/lucide-react/dist/umd/lucide-react.js"></script>
-    
-    <!-- Babel for Single File JSX Execution -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    
     <style>
-        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
-        .font-serif { font-family: 'Playfair Display', serif; }
-        .animate-fade-in { animation: fadeIn 0.8s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .prose p { margin-bottom: 1.25rem; }
+        .linen-texture {
+            background-image: url("https://www.transparenttextures.com/patterns/linen-paper.png");
+        }
+        .fade-in {
+            animation: fadeIn 1.2s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        .logo-nav {
+            max-height: 50px;
+            width: auto;
+        }
+        .logo-legacy {
+            max-width: 280px;
+            height: auto;
+        }
+        .loader {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #C5A059;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
-<body class="bg-white text-slate-900 selection:bg-amber-100 selection:text-amber-900">
-    <div id="root"></div>
+<body class="bg-warmWhite text-legacyNavy font-sans selection:bg-champagneGold selection:text-white">
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-warmWhite/90 backdrop-blur-md border-b border-legacyNavy/5">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <img src="logo-secondary.png" alt="The Donna Jean Hair Restoration Clinic Logo" class="logo-nav" onerror="this.style.display='none';">
+                <div class="flex flex-col leading-tight">
+                    <span class="text-[10px] tracking-[0.2em] font-medium text-legacyNavy/60 uppercase">Our S.P.A.C.E. Studios</span>
+                    <span class="font-serif text-lg md:text-xl font-bold tracking-tight">The Donna Jean Hair Restoration Clinic</span>
+                </div>
+            </div>
+            
+            <div class="hidden lg:flex items-center space-x-8 text-sm font-medium tracking-wide">
+                <a href="#story" class="hover:text-champagneGold transition-colors">OUR STORY</a>
+                <a href="#ai-tools" class="hover:text-champagneGold transition-colors">✨ AI TOOLS</a>
+                <a href="#difference" class="hover:text-champagneGold transition-colors">THE SCIENCE</a>
+                <a href="#collection" class="hover:text-champagneGold transition-colors">THE COLLECTION</a>
+                <a href="#referrals" class="hover:text-champagneGold transition-colors">MEDICAL REFERRALS</a>
+            </div>
+
+            <a href="#contact" class="hidden md:block bg-champagneGold text-white px-6 py-2.5 rounded-full text-xs font-semibold tracking-widest hover:bg-legacyNavy transition-all duration-300 shadow-lg shadow-champagneGold/20 text-center">
+                BOOK A RITUAL
+            </a>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="lg:hidden p-2" onclick="toggleMobileMenu()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
         
-        // Safety check for Lucide icons
-        const getIcons = () => window.lucide || window.Lucide || {};
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-warmWhite border-b border-legacyNavy/10 px-6 py-6 space-y-4">
+            <a href="#story" class="block text-sm font-medium">OUR STORY</a>
+            <a href="#ai-tools" class="block text-sm font-medium">✨ AI TOOLS</a>
+            <a href="#difference" class="block text-sm font-medium">THE SCIENCE</a>
+            <a href="#collection" class="block text-sm font-medium">THE COLLECTION</a>
+            <a href="#referrals" class="block text-sm font-medium">MEDICAL REFERRALS</a>
+            <a href="#contact" class="block bg-champagneGold text-white text-center py-3 rounded-full text-xs font-semibold tracking-widest">BOOK A RITUAL</a>
+        </div>
+    </nav>
 
-        const SafeIcon = ({ name, size = 24, className = "" }) => {
-            const icons = getIcons();
-            const IconComponent = icons[name];
-            if (!IconComponent) return null;
-            return <IconComponent size={size} className={className} />;
-        };
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-gradient-to-r from-warmWhite via-warmWhite/80 to-transparent z-10"></div>
+            <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=2000" alt="Arlington Hair Restoration Sanctuary" class="w-full h-full object-cover opacity-30">
+        </div>
 
-        const App = () => {
-            const [isMenuOpen, setIsMenuOpen] = useState(false);
-            const [activeTab, setActiveTab] = useState('home');
-            const [scrolled, setScrolled] = useState(false);
-            const [aiPrompt, setAiPrompt] = useState('');
-            const [aiResponse, setAiResponse] = useState('');
-            const [isAiLoading, setIsAiLoading] = useState(false);
-            const [currentAiMode, setCurrentAiMode] = useState('ritual');
-
-            useEffect(() => {
-                const handleScroll = () => setScrolled(window.scrollY > 20);
-                window.addEventListener('scroll', handleScroll);
-                return () => window.removeEventListener('scroll', handleScroll);
-            }, []);
-
-            // Gemini API Call with Exponential Backoff
-            const callGemini = async (prompt) => {
-                const apiKey = ""; // Set your API key here
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-                
-                const systemInstructions = {
-                    ritual: "You are the AI Assistant for Our S.P.A.C.E. Studios. Tone: Affirming, clinical yet soulful. Create a personalized scalp-health ritual focused on 'deeply seen, immensely loved, and securely held'. Emphasize that image maintenance during illness is a vital part of healing, not vanity.",
-                    texture: "Help identify hair texture (Types 2, 3, 4) using True + Pure Texture standards and suggest matching medical-grade prosthetics. Focus on realistic matches for Black and Brown patients.",
-                    medical: "Explain clinical codes like A9282 (Cranial Prosthesis). Help draft notes for insurance reimbursement support using terms like 'Durable Medical Equipment'."
-                };
-
-                setIsAiLoading(true);
-                setAiResponse('');
-
-                const fetchWithRetry = async (attempt = 0) => {
-                    try {
-                        const response = await fetch(url, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                contents: [{ parts: [{ text: prompt }] }],
-                                systemInstruction: { parts: [{ text: systemInstructions[currentAiMode] }] }
-                            })
-                        });
-                        if (!response.ok) throw new Error('API Error');
-                        const data = await response.json();
-                        return data.candidates?.[0]?.content?.parts?.[0]?.text;
-                    } catch (error) {
-                        if (attempt < 4) {
-                            await new Promise(r => setTimeout(r, Math.pow(2, attempt) * 1000));
-                            return fetchWithRetry(attempt + 1);
-                        }
-                        throw error;
-                    }
-                };
-
-                try {
-                    const result = await fetchWithRetry();
-                    setAiResponse(result);
-                } catch (e) {
-                    setAiResponse("Our sanctuary is experiencing a quiet moment. Please verify your API key or try again in a few moments.");
-                } finally {
-                    setIsAiLoading(false);
-                }
-            };
-
-            const Nav = () => (
-                <nav className={`fixed top-0 w-full z-50 transition-all duration-700 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg py-4' : 'bg-transparent py-8'}`}>
-                    <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-                        <div className="cursor-pointer group flex items-center gap-2" onClick={() => setActiveTab('home')}>
-                            <h1 className="text-xl md:text-2xl font-serif italic tracking-tight group-hover:text-amber-900 transition-colors">
-                                Our S.P.A.C.E. <span className="text-[10px] font-bold uppercase tracking-[.4em] ml-2 text-slate-400">Studios</span>
-                            </h1>
-                        </div>
-                        <div className="hidden lg:flex gap-10 items-center">
-                            {['home', 'about', 'services', 'assistant', 'medical'].map((tab) => (
-                                <button key={tab} onClick={() => setActiveTab(tab)} className={`uppercase tracking-widest text-[10px] font-bold transition-all relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:h-[1px] after:bg-amber-600 after:transition-all ${activeTab === tab ? 'text-amber-800 after:w-full' : 'text-slate-500 hover:text-slate-900 after:w-0'}`}>
-                                    {tab === 'medical' ? 'Partners' : tab.charAt(0).toUpperCase() + tab.slice(1)}
-                                </button>
-                            ))}
-                            <button onClick={() => setActiveTab('services')} className="bg-slate-900 text-white px-6 py-2 uppercase tracking-widest text-[10px] font-bold hover:bg-amber-800 transition-all">Consultation</button>
-                        </div>
-                        <button className="lg:hidden p-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                            <SafeIcon name={isMenuOpen ? 'X' : 'Menu'} size={24} />
-                        </button>
-                    </div>
-                </nav>
-            );
-
-            const MobileMenu = () => (
-                <div className={`fixed inset-0 bg-white z-[60] flex flex-col items-center justify-center transition-transform duration-500 ${isMenuOpen ? 'translate-y-0' : '-translate-y-full'}`}>
-                    <button className="absolute top-10 right-8 text-slate-900" onClick={() => setIsMenuOpen(false)}>
-                        <SafeIcon name="X" size={32} />
-                    </button>
-                    {['home', 'about', 'services', 'assistant', 'medical'].map((tab) => (
-                        <button
-                            key={tab}
-                            onClick={() => { setActiveTab(tab); setIsMenuOpen(false); }}
-                            className="text-4xl font-serif italic mb-8 capitalize tracking-tight hover:text-amber-700 transition-colors"
-                        >
-                            {tab === 'medical' ? 'For Partners' : tab}
-                        </button>
-                    ))}
-                    <button 
-                        onClick={() => { setActiveTab('services'); setIsMenuOpen(false); }}
-                        className="mt-4 bg-slate-900 text-white px-10 py-4 font-bold uppercase tracking-widest"
-                    >
-                        Consultation
-                    </button>
+        <div class="relative z-20 max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+            <div class="fade-in">
+                <h1 class="font-serif text-5xl md:text-7xl leading-tight mb-6">
+                    Restoring More <br><span class="italic text-champagneGold">Than Hair.</span>
+                </h1>
+                <p class="text-lg md:text-xl text-legacyNavy/80 mb-8 max-w-lg font-light leading-relaxed">
+                    NPI Registered <strong>Medical-grade hair restoration</strong> and <strong>sensory-safe hair systems</strong> engineered for your recovery and designed for your dignity. Reclaim the person in the mirror.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#ai-tools" class="bg-legacyNavy text-white px-8 py-4 rounded-full text-sm font-semibold tracking-widest hover:bg-champagneGold transition-all text-center">
+                        EXPLORE ✨ AI TOOLS
+                    </a>
+                    <a href="#story" class="border border-legacyNavy/20 px-8 py-4 rounded-full text-sm font-semibold tracking-widest hover:bg-legacyNavy hover:text-white transition-all text-center">
+                        THE DONNA JEAN LEGACY
+                    </a>
                 </div>
-            );
-
-            const Home = () => (
-                <div className="animate-fade-in">
-                    <section className="relative h-[95vh] flex items-center justify-center overflow-hidden bg-slate-100 px-4">
-                        <div className="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1594132176008-0919df495333?q=80&w=2070')] bg-cover bg-center"></div>
-                        <div className="relative z-10 text-center max-w-5xl">
-                            <span className="uppercase tracking-[.4em] text-xs text-amber-800 mb-6 block font-bold">Medical Hair Specialist | Arlington, VA</span>
-                            <h1 className="text-5xl md:text-8xl font-serif text-slate-900 mb-8 italic">Restoring Identity.</h1>
-                            <p className="text-lg md:text-2xl text-slate-700 mb-10 font-light italic max-w-3xl mx-auto leading-relaxed">Medical Hair Restoration & Cranial Prosthetics engineered for Oncology and Alopecia. A sanctuary where maintenance is medicine.</p>
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                <button onClick={() => setActiveTab('services')} className="bg-slate-900 text-white px-10 py-5 uppercase tracking-widest text-sm hover:bg-slate-800 shadow-2xl transition-all">Request Consultation</button>
-                                <button onClick={() => setActiveTab('assistant')} className="border border-slate-900 text-slate-900 px-10 py-5 uppercase tracking-widest text-sm hover:bg-slate-50 transition-all">✨ AI Restoration Guide</button>
-                            </div>
-                        </div>
-                    </section>
+            </div>
+            <div class="hidden md:flex justify-center fade-in" style="animation-delay: 0.3s;">
+                <div class="relative w-80 h-[500px] bg-legacyNavy/5 rounded-t-full border-4 border-champagneGold/20 overflow-hidden flex items-center justify-center p-12">
+                     <div class="absolute inset-0 bg-warmWhite/40 backdrop-blur-[2px]"></div>
+                     <div class="relative text-center z-10">
+                        <svg class="w-12 h-12 text-champagneGold mx-auto mb-6 opacity-40" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+                        <span class="font-serif italic text-3xl leading-snug">"Your private safe harbor for restoration."</span>
+                     </div>
                 </div>
-            );
+            </div>
+        </div>
+    </header>
 
-            const Assistant = () => (
-                <div className="py-32 px-4 max-w-4xl mx-auto animate-fade-in">
-                    <div className="text-center mb-16">
-                        <h2 className="text-4xl md:text-5xl font-serif italic mb-4">✨ Restoration Assistant</h2>
-                        <div className="w-16 h-1 bg-amber-600 mx-auto mb-6"></div>
-                        <p className="text-slate-500 italic text-lg">AI-guided care rooted in clinical science and deep empathy.</p>
+    <!-- The Legacy Narrative -->
+    <section id="story" class="py-24 linen-texture bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid md:grid-cols-12 gap-16 items-center">
+                <div class="md:col-span-5 flex justify-center">
+                    <div class="relative">
+                        <div class="absolute -inset-4 border border-champagneGold/20 rounded-full scale-110 animate-pulse"></div>
+                        <img src="The Donna Jean Hair Restoration Clinic.jpg" alt="The Donna Jean Legacy: Restoration and Dignity" class="logo-legacy relative z-10" onerror="this.onerror=null; this.src='https://via.placeholder.com/300?text=The+Donna+Jean+Legacy';">
                     </div>
-                    <div className="bg-white border border-slate-100 shadow-2xl overflow-hidden">
-                        <div className="flex border-b">
-                            {['ritual', 'texture', 'medical'].map(m => (
-                                <button key={m} onClick={() => {setCurrentAiMode(m); setAiResponse('');}} className={`flex-1 py-4 text-[10px] font-bold uppercase tracking-widest transition-all ${currentAiMode === m ? 'bg-slate-900 text-white' : 'text-slate-400'}`}>
-                                    {m}
-                                </button>
-                            ))}
-                        </div>
-                        <div className="p-8 md:p-12">
-                            {!aiResponse && !isAiLoading && (
-                                <div className="space-y-6 text-center">
-                                    <textarea value={aiPrompt} onChange={e => setAiPrompt(e.target.value)} placeholder="Describe your journey stage or hair texture goals..." className="w-full bg-slate-50 p-6 italic font-light h-32 outline-none focus:ring-1 focus:ring-amber-200 resize-none" />
-                                    <button onClick={() => callGemini(aiPrompt)} disabled={!aiPrompt} className="bg-slate-900 text-white px-10 py-4 uppercase tracking-widest text-xs disabled:opacity-30">Get Personalized Guidance</button>
-                                </div>
-                            )}
-                            {isAiLoading && (
-                                <div className="py-20 text-center space-y-4">
-                                    <SafeIcon name="Loader2" className="w-8 h-8 mx-auto animate-spin text-amber-600" />
-                                    <p className="animate-pulse italic text-slate-400 font-serif text-xl">Deeply seeing you...</p>
-                                </div>
-                            )}
-                            {aiResponse && (
-                                <div className="bg-slate-50 p-8 border-l-4 border-amber-600 italic font-light text-slate-600 leading-relaxed whitespace-pre-line animate-fade-in">
-                                    {aiResponse}
-                                    <button onClick={() => setAiResponse('')} className="block mt-8 text-xs font-bold uppercase tracking-widest text-slate-900 border-b border-slate-900">Ask Another Question</button>
-                                </div>
-                            )}
+                </div>
+                <div class="md:col-span-7">
+                    <h2 class="text-sm tracking-[0.3em] font-semibold text-champagneGold mb-4 uppercase">Restoration and Dignity</h2>
+                    <h3 class="font-serif text-4xl md:text-5xl mb-6 uppercase leading-tight">The Donna Jean Legacy: Our Story</h3>
+                    <div class="space-y-6 text-legacyNavy/80 font-light leading-relaxed text-lg">
+                        <p>For over 30 years, Donna Jean Coleman-Scotti viewed her salon visits as a ritual of strength—a non-negotiable time for dignity and self-care. When illness attempted to strip that ritual away, the seed for this studio was planted.</p>
+                        <p>Founded by Victor Scotti, Jr., our clinic is a love letter to that strength. We provide a sanctuary for those transitioning from "salon client" to "patient," ensuring your image remains a vital component of your healing and mental wellness. We bridge the gap between clinical necessity and human compassion through medical artistry.</p>
+                        <div class="pt-4">
+                            <p class="font-serif italic text-2xl text-legacyNavy">Victor Scotti, Jr.</p>
+                            <p class="text-xs tracking-[0.2em] font-bold text-champagneGold uppercase mt-1">Founder & Specialist</p>
                         </div>
                     </div>
                 </div>
-            );
+            </div>
+        </div>
+    </section>
 
-            const About = () => (
-                <div className="py-32 px-6 max-w-5xl mx-auto animate-fade-in">
-                    <div className="grid md:grid-cols-2 gap-16 items-center">
-                        <div className="relative">
-                            <img 
-                                src="Donna Scotti.jpg" 
-                                alt="Donna Jean Coleman-Scotti" 
-                                className="w-full h-auto shadow-2xl grayscale hover:grayscale-0 transition-all duration-1000 border-8 border-white" 
-                                onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1000"; }}
-                            />
-                            <div className="absolute -bottom-6 -right-6 bg-amber-50 p-6 shadow-xl border border-amber-100 max-w-xs">
-                                <p className="font-serif italic text-amber-900 text-sm">"Image maintenance is not vanity—it is a vital part of healing."</p>
-                            </div>
-                        </div>
-                        <div>
-                            <h2 className="text-4xl font-serif italic mb-8">The Donna Jean Legacy</h2>
-                            <div className="w-16 h-1 bg-amber-600 mb-8"></div>
-                            <div className="prose prose-slate font-light italic text-slate-600 leading-relaxed text-lg">
-                                <p>Growing up on the South Side of Chicago, my mother viewed her salon visits as a ritual of strength. During her 8-year battle with Multiple Myeloma, I witnessed the profound impact of losing that sanctuary.</p>
-                                <p>Our S.P.A.C.E. Studios exists to honor her resilience. We create containers where you are deeply seen, immensely loved, and securely held—bridging the gap between clinical necessity and luxury cosmetology.</p>
-                                <div className="bg-amber-50 p-8 border-l-4 border-amber-500 my-10 text-center italic">
-                                    <p className="text-slate-900 font-serif text-2xl">"We restore more than hair; we restore the ritual of being yourself."</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
+    <!-- ✨ AI SANCTUARY TOOLS SECTION -->
+    <section id="ai-tools" class="py-24 bg-legacyNavy text-warmWhite linen-texture relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-champagneGold/5 rounded-full -mr-48 -mt-48 blur-3xl"></div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-4xl md:text-6xl mb-4 italic">✨ AI Sanctuary Tools</h2>
+                <p class="text-champagneGold font-medium tracking-widest text-sm uppercase">Preliminary Insights Empowered by Gemini</p>
+            </div>
 
-            const Medical = () => (
-                <div className="py-32 px-6 max-w-5xl mx-auto animate-fade-in">
-                    <h2 className="text-4xl font-serif italic mb-12 text-center">Clinical Partnership</h2>
-                    <div className="grid md:grid-cols-2 gap-10">
-                        <div className="bg-slate-900 text-white p-12 shadow-xl flex flex-col justify-center">
-                            <h3 className="text-2xl font-serif italic mb-8 flex items-center gap-3">
-                                <SafeIcon name="ShieldCheck" className="text-amber-500" /> NPI & Clinical Data
-                            </h3>
-                            <ul className="space-y-4 text-sm text-slate-400 font-light uppercase tracking-widest">
-                                <li>• NAICS: 339113 (Medical Supplies)</li>
-                                <li>• CPT: A9282 (Synthetic Prosthesis)</li>
-                                <li>• CPT: L8499 (Human Hair Prosthesis)</li>
-                                <li>• Minority-Owned Small Business</li>
-                                <li>• Arlington VAMC Provider Status</li>
-                            </ul>
-                        </div>
-                        <div className="bg-amber-50 p-12 flex flex-col justify-center border border-amber-100 shadow-sm">
-                            <h3 className="text-2xl font-serif italic mb-8 flex items-center gap-3 text-slate-800">
-                                <SafeIcon name="Info" className="text-amber-700" /> Patient Referral
-                            </h3>
-                            <p className="text-slate-600 font-light text-base italic mb-8 leading-relaxed">
-                                We specialize in high-fidelity texture matching (Types 3 & 4) for oncology and alopecia patients. We provide full Superbills for insurance reimbursement.
-                            </p>
-                            <button className="bg-amber-800 text-white px-8 py-4 font-bold uppercase tracking-widest text-xs shadow-lg hover:bg-amber-900 self-start">Request Provider Packet</button>
-                        </div>
-                    </div>
-                </div>
-            );
-
-            const Services = () => (
-                <div className="py-32 px-6 max-w-6xl mx-auto animate-fade-in">
-                    <div className="text-center mb-16">
-                        <h2 className="text-4xl md:text-5xl font-serif italic mb-4">Restorative Solutions</h2>
-                        <div className="w-16 h-1 bg-amber-600 mx-auto"></div>
-                    </div>
-                    <div className="grid md:grid-cols-3 gap-8">
-                        {[
-                            { name: "Compassionate Consultation", price: "$200", icon: "FileText", desc: "Private clinical assessment in a sensory-safe suite. Scalp analysis, texture matching, and insurance guidance." },
-                            { name: "Cranial Prosthesis Design", price: "$2,800+", icon: "Heart", desc: "Medical-grade systems with silicone non-slip grips and silk/bamboo liners. Customized for oncology sensitivity." },
-                            { name: "Recovery Maintenance", price: "$175", icon: "Clock", desc: "Monthly membership for prosthetic deep cleaning and trichology-approved scalp care during regrowth." }
-                        ].map((s, i) => (
-                            <div key={i} className="border border-slate-100 p-12 bg-white hover:shadow-2xl transition-all relative group flex flex-col h-full">
-                                <div className="text-amber-700 mb-8 group-hover:scale-110 transition-transform"><SafeIcon name={s.icon} size={36} /></div>
-                                <h3 className="text-2xl font-serif italic mb-2 text-slate-800">{s.name}</h3>
-                                <p className="text-amber-700 font-bold text-xs uppercase tracking-widest mb-6">{s.price}</p>
-                                <p className="text-slate-500 font-light text-sm italic mb-10 leading-relaxed flex-grow">{s.desc}</p>
-                                <button className="text-slate-900 text-xs font-bold uppercase tracking-widest border-b-2 border-slate-900 pb-1 hover:text-amber-700 hover:border-amber-700 transition-all self-start">Book Service</button>
-                            </div>
-                        ))}
+            <div class="grid md:grid-cols-2 gap-12">
+                <!-- AI Identity Matcher -->
+                <div class="bg-white/5 border border-white/10 p-10 rounded-[3rem] backdrop-blur-sm">
+                    <h3 class="font-serif text-3xl mb-4 italic">✨ Identity Matcher</h3>
+                    <p class="text-sm text-white/70 mb-8 font-light leading-relaxed">Articulate your hair goals before your visit. We specialize in <strong>natural texture medical wigs</strong> and <strong>medical wigs for Black women</strong> navigating change.</p>
+                    
+                    <div id="chat-container" class="bg-warmWhite/5 rounded-2xl h-64 overflow-y-auto p-4 mb-4 border border-white/10 space-y-4 text-sm font-light">
+                        <div class="text-champagneGold italic">"Welcome to the sanctuary. How would you describe the look you miss most?"</div>
                     </div>
                     
-                    <div className="mt-20 bg-slate-50 p-12 border-y border-slate-200 grid md:grid-cols-2 gap-12 items-center">
-                        <div>
-                            <h3 className="text-2xl font-serif italic mb-4">Financial Support</h3>
-                            <p className="text-slate-500 font-light italic text-sm mb-6">We provide insurance support via Superbills and accept flexible payment options to ensure access to care.</p>
-                            <div className="flex gap-8 opacity-60 grayscale hover:grayscale-0 transition-all">
-                                <div className="text-center"><p className="text-[10px] font-bold uppercase tracking-widest">CareCredit</p></div>
-                                <div className="text-center"><p className="text-[10px] font-bold uppercase tracking-widest">Vagaro Pay Later</p></div>
-                            </div>
-                        </div>
-                        <div className="text-center md:text-right italic text-slate-400 font-light leading-relaxed">
-                            "Specializing in True + Pure Texture matches for Black and Brown patients overlooked in the traditional medical market."
-                        </div>
+                    <div class="flex gap-2">
+                        <input type="text" id="chat-input" class="flex-1 bg-white/10 border-none rounded-full px-6 py-3 text-sm outline-none focus:ring-1 focus:ring-champagneGold" placeholder="Tell us your goals...">
+                        <button onclick="handleIdentityChat()" id="chat-btn" class="bg-champagneGold text-white px-6 py-3 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-white hover:text-legacyNavy transition-all">
+                            ✨ Consult
+                        </button>
                     </div>
                 </div>
-            );
 
-            return (
-                <div className="min-h-screen">
-                    <Nav />
-                    <MobileMenu />
-                    <main>
-                        {activeTab === 'home' && <Home />}
-                        {activeTab === 'about' && <About />}
-                        {activeTab === 'services' && <Services />}
-                        {activeTab === 'assistant' && <Assistant />}
-                        {activeTab === 'medical' && <Medical />}
-                    </main>
-                    <footer className="bg-slate-50 py-24 px-6 border-t mt-20">
-                        <div className="max-w-6xl mx-auto text-center">
-                            <h2 className="text-2xl font-serif italic mb-4">Our S.P.A.C.E. Studios</h2>
-                            <p className="text-slate-400 text-[10px] uppercase tracking-[.4em] mb-12">Arlington, Virginia • A Sanctuary for Medical Hair Restoration</p>
-                            <div className="flex justify-center gap-12 text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-16">
-                                <span className="hover:text-amber-700 cursor-pointer">Instagram</span>
-                                <span className="hover:text-amber-700 cursor-pointer">LinkedIn</span>
-                                <span className="hover:text-amber-700 cursor-pointer">Vagaro Portal</span>
+                <!-- AI Scalp Insight -->
+                <div class="bg-white/5 border border-white/10 p-10 rounded-[3rem] backdrop-blur-sm">
+                    <h3 class="font-serif text-3xl mb-4 italic">✨ Scalp Health Insight</h3>
+                    <p class="text-sm text-white/70 mb-8 font-light leading-relaxed">Upload a clear photo to prepare for your <strong>trichology-led scalp assessment</strong>. Our AI provides a summary to help Victor prioritize your scalp health.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="relative group cursor-pointer border-2 border-dashed border-white/20 rounded-2xl p-8 text-center hover:border-champagneGold transition-all" onclick="document.getElementById('scalp-upload').click()">
+                            <input type="file" id="scalp-upload" class="hidden" accept="image/*" onchange="previewScalpImage(event)">
+                            <div id="upload-placeholder">
+                                <svg class="w-12 h-12 text-champagneGold/40 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-width="1"/></svg>
+                                <span class="text-xs font-bold tracking-widest uppercase">Upload photo</span>
                             </div>
-                            <div className="text-slate-300 text-[10px] uppercase tracking-[.5em]">The Donna Jean Legacy &copy; 2025</div>
+                            <img id="scalp-preview" class="hidden w-full h-48 object-cover rounded-xl" alt="Scalp health preview">
                         </div>
-                    </footer>
-                </div>
-            );
-        };
+                        
+                        <button onclick="analyzeScalp()" id="analyze-btn" class="w-full bg-white text-legacyNavy py-4 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-champagneGold hover:text-white transition-all">
+                            ✨ Analyze Photo
+                        </button>
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+                        <div id="analysis-result" class="hidden p-6 bg-white/5 border border-white/10 rounded-2xl text-sm font-light leading-relaxed"></div>
+                    </div>
+                </div>
+            </div>
+            <p class="text-[10px] text-center mt-12 opacity-40 uppercase tracking-[0.3em]">AI features are for preparation only and do not replace professional medical diagnosis.</p>
+        </div>
+    </section>
+
+    <!-- The Unicorn Differentiator -->
+    <section id="difference" class="py-24 bg-warmWhite">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-4xl md:text-5xl mb-4 italic">The Science of Medical Cosmetology</h2>
+                <p class="text-champagneGold font-medium tracking-widest text-sm uppercase">The Integration Difference</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white border border-legacyNavy/10 p-10 rounded-[2rem]">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="p-3 bg-red-500/10 rounded-full text-red-400">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </div>
+                        <h4 class="font-serif text-2xl uppercase">Standard DME Vendors</h4>
+                    </div>
+                    <ul class="space-y-5 text-sm text-legacyNavy/60">
+                        <li class="flex items-start gap-4"><span>✕</span> Sells medical devices as boxed products</li>
+                        <li class="flex items-start gap-4"><span>✕</span> No legal authority to cut or color hair</li>
+                        <li class="flex items-start gap-4"><span>✕</span> Factory-colored units look unnatural</li>
+                        <li class="flex items-start gap-4"><span>✕</span> No expertise in biological hair blending</li>
+                    </ul>
+                </div>
+
+                <div class="bg-legacyNavy p-10 rounded-[2rem] text-warmWhite shadow-2xl relative border-t-8 border-champagneGold">
+                    <div class="absolute -top-5 left-1/2 -translate-x-1/2 bg-champagneGold text-white text-[10px] font-bold tracking-[0.2em] px-6 py-2 rounded-full shadow-xl uppercase">Certified Cranial Prosthesis Specialist</div>
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="p-3 bg-sageEucalyptus/20 rounded-full text-sageEucalyptus">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        </div>
+                        <h4 class="font-serif text-2xl uppercase">The Donna Jean Clinic</h4>
+                    </div>
+                    <ul class="space-y-5 text-sm font-medium">
+                        <li class="flex items-start gap-4"><span class="text-sageEucalyptus font-bold">✓</span> Licensed Cosmetologist Educator Authority</li>
+                        <li class="flex items-start gap-4"><span class="text-sageEucalyptus font-bold">✓</span> Artisan Shadow Roots & Root Smudging</li>
+                        <li class="flex items-start gap-4"><span class="text-sageEucalyptus font-bold">✓</span> Precision Face-Framing & De-bulking Cuts</li>
+                        <li class="flex items-start gap-4"><span class="text-sageEucalyptus font-bold">✓</span> Professional Bio-Hair Integration</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Collection -->
+    <section id="collection" class="py-24 linen-texture bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 border-b border-legacyNavy/5 pb-10">
+                <div class="max-w-xl">
+                    <h2 class="font-serif text-4xl md:text-5xl mb-4 italic uppercase">The Restoration Collection: Services</h2>
+                    <p class="text-legacyNavy/60 font-light italic">Custom Medical Wigs & Scalp Care engineered for your strength.</p>
+                </div>
+                <div class="bg-warmWhite px-6 py-3 rounded-full border border-champagneGold/30 text-legacyNavy font-serif italic text-sm">
+                    <strong>Durable Medical Equipment Superbill</strong> Provided
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-10">
+                <div class="group bg-white border border-legacyNavy/5 p-12 rounded-[2.5rem] hover:shadow-2xl transition-all duration-500">
+                    <h5 class="font-serif text-2xl mb-4 italic">The Compassionate Consultation</h5>
+                    <p class="text-legacyNavy/70 text-sm mb-8 font-light leading-relaxed">Trichology-led assessment, measurements, and insurance terminology guidance for oncology needs.</p>
+                    <div class="text-xl font-medium text-legacyNavy mb-8">$200 <span class="text-[10px] block mt-1 opacity-40 uppercase">Credited toward purchase</span></div>
+                </div>
+
+                <div class="group bg-legacyNavy p-12 rounded-[2.5rem] text-warmWhite scale-105 shadow-2xl relative">
+                    <h5 class="font-serif text-3xl mb-4 italic uppercase tracking-tighter">Custom Cranial Prosthesis Oncology</h5>
+                    <p class="text-warmWhite/70 text-sm mb-8 font-light leading-relaxed">Medical-grade systems with shadow roots, de-bulking cuts, and silk liners designed for chemotherapy-induced alopecia care.</p>
+                    <div class="text-xl font-medium text-champagneGold mb-8">$2,800 – $5,000+</div>
+                </div>
+
+                <div class="group bg-white border border-legacyNavy/5 p-12 rounded-[2.5rem] hover:shadow-2xl transition-all duration-500">
+                    <h5 class="font-serif text-2xl mb-4 italic">"The Recovery" Program</h5>
+                    <p class="text-legacyNavy/70 text-sm mb-8 font-light leading-relaxed">Ongoing scalp hydration and unit maintenance to support healing and potential biological regrowth.</p>
+                    <div class="text-xl font-medium text-legacyNavy mb-8">$175 <span class="text-[10px] block mt-1 opacity-40 uppercase">Per Session Membership</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Provider Profile -->
+    <section class="py-24 bg-warmWhite">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center gap-20">
+                <div class="w-full md:w-5/12 aspect-[4/5] bg-legacyNavy/10 rounded-[3rem] overflow-hidden relative shadow-inner">
+                    <img src="Victor, Scotti - V. Anthony Artistry.jpg" alt="Victor Scotti, Jr. - Alopecia specialist Arlington VA" class="w-full h-full object-cover grayscale opacity-90">
+                    <div class="absolute bottom-8 left-8 right-8 text-white">
+                        <p class="text-xs tracking-[0.3em] font-bold uppercase mb-1">Victor Scotti, Jr.</p>
+                        <p class="font-serif italic text-lg opacity-80">Certified Specialist</p>
+                    </div>
+                </div>
+                <div class="w-full md:w-7/12">
+                    <h2 class="text-sm tracking-[0.3em] font-semibold text-champagneGold mb-4 uppercase">Meet Your Provider</h2>
+                    <h3 class="font-serif text-4xl md:text-5xl mb-8">Clinical Authority. <br><span class="italic">Couture Results.</span></h3>
+                    <p class="text-legacyNavy/80 font-light mb-10 text-xl italic leading-relaxed">"I transitioned my career to ensure no one has to choose between their medical reality and their dignity. As a dedicated <strong>alopecia specialist in Arlington, VA</strong>, I am here to help you recognize yourself again."</p>
+                    
+                    <ul class="text-[10px] font-bold tracking-widest text-legacyNavy/50 space-y-4 uppercase">
+                        <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-champagneGold"></span> Certified Cranial Prosthesis Specialist</li>
+                        <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-champagneGold"></span> Licensed Cosmetology Educator</li>
+                        <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-champagneGold"></span> IAT Trichology Practitioner (Student)</li>
+                        <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-champagneGold"></span> NPI Registered Hair Restoration Provider</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Referral Hub -->
+    <section id="referrals" class="py-32 bg-legacyNavy text-white text-center relative overflow-hidden">
+        <div class="max-w-4xl mx-auto px-6 relative z-10">
+            <h2 class="font-serif text-4xl md:text-6xl mb-8 leading-tight">Clinical Referrals for Oncology & Dermatology</h2>
+            <p class="text-champagneGold font-medium tracking-widest text-sm uppercase mb-4">NPI Registered Provider</p>
+            <p class="text-lg text-white/70 font-light mb-12">Partner with a Certified Cranial Prosthesis Specialist. We provide NPI-registered, HIPAA-compliant care and insurance support for patients at Inova, Howard, and MedStar hospitals.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-6">
+                <button class="bg-champagneGold text-white px-12 py-5 rounded-full text-xs font-bold tracking-widest hover:bg-white hover:text-legacyNavy transition-all">ACCESS PROVIDER PORTAL</button>
+                <button class="border border-white/30 px-12 py-5 rounded-full text-xs font-bold tracking-widest hover:bg-white/10 transition-all">REFERRAL GUIDE</button>
+            </div>
+            <div class="mt-16 flex flex-wrap justify-center items-center gap-12 opacity-30 text-[10px] font-bold uppercase tracking-widest">
+                <span>HIPAA SECURE</span>
+                <span>NPI REGISTERED</span>
+                <span>CARECREDIT PROVIDER</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 relative z-40">
+        <div class="max-w-5xl mx-auto px-6 bg-white rounded-[4rem] shadow-2xl p-16 relative -mt-32">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-5xl mb-4 italic">Request Your Discovery Session</h2>
+                <p class="text-legacyNavy/50 font-light">A private sanctuary for chemotherapy-induced alopecia care in Arlington.</p>
+            </div>
+            
+            <form class="grid md:grid-cols-2 gap-10" onsubmit="event.preventDefault(); showMessage();">
+                <div class="space-y-2">
+                    <label class="text-[10px] uppercase tracking-[0.3em] font-bold text-legacyNavy/30 ml-4">Full Name</label>
+                    <input type="text" class="w-full bg-warmWhite border-none rounded-full px-8 py-5 focus:ring-2 focus:ring-champagneGold" placeholder="Name">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] uppercase tracking-[0.3em] font-bold text-legacyNavy/30 ml-4">Email Address</label>
+                    <input type="email" class="w-full bg-warmWhite border-none rounded-full px-8 py-5 focus:ring-2 focus:ring-champagneGold" placeholder="Email">
+                </div>
+                <div class="md:col-span-2">
+                    <button type="submit" class="w-full bg-legacyNavy text-white py-6 rounded-full text-xs font-bold tracking-[0.4em] hover:bg-champagneGold transition-all shadow-xl uppercase">Send Love Letter</button>
+                </div>
+            </form>
+            <div id="success-msg" class="hidden mt-10 p-6 bg-sageEucalyptus/10 text-sageEucalyptus text-center rounded-[2rem] font-serif italic text-xl">Thank you. We will reach out with discretion soon.</div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-warmWhite pt-40 pb-16 border-t border-legacyNavy/5">
+        <div class="max-w-7xl mx-auto px-6 text-center md:text-left">
+            <div class="grid md:grid-cols-12 gap-16 mb-20">
+                <div class="md:col-span-6">
+                    <span class="text-xs tracking-[0.3em] font-semibold text-legacyNavy/30 uppercase">OUR S.P.A.C.E. STUDIOS LLC</span>
+                    <h4 class="font-serif text-3xl font-bold uppercase mt-1">The Donna Jean Hair Restoration Clinic</h4>
+                </div>
+                <div class="md:col-span-3">
+                    <h6 class="text-[10px] uppercase tracking-widest font-bold text-legacyNavy/40 mb-4">Location</h6>
+                    <p class="text-xs font-medium leading-loose text-legacyNavy/70 italic">1010 North Glebe Road 100, Studio 5, Arlington, VA 22201</p>
+                </div>
+                <div class="md:col-span-3">
+                    <h6 class="text-[10px] uppercase tracking-widest font-bold text-legacyNavy/40 mb-4">Clinical</h6>
+                    <p class="text-[10px] font-bold tracking-widest text-legacyNavy/50 uppercase">HIPAA | NPI | CARECREDIT</p>
+                </div>
+            </div>
+            <p class="text-[10px] uppercase tracking-[0.3em] text-legacyNavy/40 text-center">© 2024 Our S.P.A.C.E. Studios LLC. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- AI Logic Implementation -->
+    <script>
+        const apiKey = "";
+        
+        async function fetchGemini(payload) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            let retries = 0;
+            const maxRetries = 5;
+            while (retries <= maxRetries) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) throw new Error('API Error');
+                    const data = await response.json();
+                    return data.candidates?.[0]?.content?.parts?.[0]?.text;
+                } catch (error) {
+                    if (retries === maxRetries) throw error;
+                    await new Promise(res => setTimeout(res, Math.pow(2, retries) * 1000));
+                    retries++;
+                }
+            }
+        }
+
+        async function handleIdentityChat() {
+            const input = document.getElementById('chat-input');
+            const container = document.getElementById('chat-container');
+            const btn = document.getElementById('chat-btn');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const userMsg = document.createElement('div');
+            userMsg.className = 'text-right text-white/60 font-medium italic';
+            userMsg.innerText = `"${text}"`;
+            container.appendChild(userMsg);
+            input.value = '';
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loader"></span>';
+
+            const systemPrompt = "You are a supportive assistant for The Donna Jean Hair Restoration Clinic. Provide empathetic advice on hair textures (3C, 4A, etc.) and suggest options to discuss with Victor Scotti, Jr. Keep it warm and professional.";
+
+            try {
+                const response = await fetchGemini({
+                    contents: [{ parts: [{ text: text }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] }
+                });
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'text-champagneGold italic mt-4';
+                aiMsg.innerText = response;
+                container.appendChild(aiMsg);
+                container.scrollTop = container.scrollHeight;
+            } catch (e) {
+                const err = document.createElement('div');
+                err.className = 'text-red-400 text-xs italic';
+                err.innerText = "Connection error. Please try again.";
+                container.appendChild(err);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = '✨ Consult';
+            }
+        }
+
+        let currentBase64 = "";
+        function previewScalpImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                const preview = document.getElementById('scalp-preview');
+                const placeholder = document.getElementById('upload-placeholder');
+                preview.src = e.target.result;
+                preview.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+                currentBase64 = e.target.result.split(',')[1];
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function analyzeScalp() {
+            if (!currentBase64) return;
+            const btn = document.getElementById('analyze-btn');
+            const resultDiv = document.getElementById('analysis-result');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loader"></span> Analyzing...';
+            resultDiv.classList.remove('hidden');
+            resultDiv.innerText = "Reviewing image...";
+
+            const prompt = "Act as a Trichology Assistant. Analyze this scalp image and describe visual indicators (follicles, redness, thinning) in clinical language for Victor Scotti, Jr. State this is not a diagnosis.";
+
+            try {
+                const response = await fetchGemini({
+                    contents: [{
+                        parts: [
+                            { text: prompt },
+                            { inlineData: { mimeType: "image/png", data: currentBase64 } }
+                        ]
+                    }]
+                });
+                resultDiv.innerText = response;
+            } catch (e) {
+                resultDiv.innerText = "Analysis failed. Please try again.";
+            } finally {
+                btn.disabled = false;
+                btn.innerText = '✨ Analyze Photo';
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function showMessage() {
+            document.getElementById('success-msg').classList.remove('hidden');
+            const form = document.querySelector('form');
+            form.style.opacity = '0.2';
+            form.style.pointerEvents = 'none';
+        }
+
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    entry.target.style.opacity = '1';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section, header').forEach(section => {
+            section.style.opacity = '0';
+            observer.observe(section);
+        });
     </script>
 </body>
 </html>
