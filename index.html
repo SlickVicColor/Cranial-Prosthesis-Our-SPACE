@@ -681,7 +681,7 @@
     </footer>
 
     <script>
-        // Placeholder for Gemini API Logic (already updated in previous turns)
+        // Gemini API Logic
         const apiKey = "";
         
         async function fetchGemini(payload) {
@@ -715,14 +715,23 @@
             btn.disabled = true;
             btn.innerHTML = '<span class="loader"></span>';
             try {
-                const response = await fetchGemini({ contents: [{ parts: [{ text: text }] }], systemInstruction: { parts: [{ text: "Pathfinder prompt logic..." }] } });
+                const systemPrompt = "Analyze this hair restoration situation and recommend if they need: The Compassionate Consultation (starting out), Custom Design (ready to buy), or Recovery (maintenance). Keep it under 2 warm sentences.";
+                const response = await fetchGemini({ contents: [{ parts: [{ text: text }] }], systemInstruction: { parts: [{ text: systemPrompt }] } });
                 resultDiv.innerText = response;
                 resultDiv.classList.remove('hidden');
             } catch (e) { console.error(e); } finally { btn.disabled = false; btn.innerText = '✨ Find My Ritual'; }
         }
 
-        // Other UI logic...
+        function toggleDashboard() {
+            const dash = document.getElementById('admin-dashboard');
+            dash.classList.toggle('hidden');
+            if (!dash.classList.contains('hidden')) {
+                dash.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
         function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
+        function downloadPDF() { alert('Review the "The Restoration Guide" tab for your typeset PDF source.'); }
     </script>
 </body>
 </html>
