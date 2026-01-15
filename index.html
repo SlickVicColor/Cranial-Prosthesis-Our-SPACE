@@ -11,62 +11,83 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     
-    <!-- Firebase SDK Imports -->
+    <!-- Firebase SDK Imports (Corrected URLs) -->
     <script type="module">
-        //import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-      
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";        
-        import { getFirestore, collection, addDoc, serverTimestamp, query, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-analytics.js";
-    
-        
-        // Firebase Configuration (Standard Canvas Environment Variables)
-      //  const firebaseConfig = JSON.parse(__firebase_config);
-          const firebaseConfig = {
-    apiKey: "AIzaSyATRxzz8UDGCYnuUWJlI74fu-L3Jjbukb0",
-    authDomain: "the-donna-jean-clinic.firebaseapp.com",
-    projectId: "the-donna-jean-clinic",
-    storageBucket: "the-donna-jean-clinic.firebasestorage.app",
-    messagingSenderId: "714647156846",
-    appId: "1:714647156846:web:ca9f59b444f8f8d9cf0e7f",
-    measurementId: "G-KQMGEW2Y2H"
-  };
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Verified Firebase configuration from user input
+        const firebaseConfig = {
+            apiKey: "AIzaSyATRxzz8UDGCYnuUWJlI74fu-L3Jjbukb0",
+            authDomain: "the-donna-jean-clinic.firebaseapp.com",
+            projectId: "the-donna-jean-clinic",
+            storageBucket: "the-donna-jean-clinic.firebasestorage.app",
+            messagingSenderId: "714647156846",
+            appId: "1:714647156846:web:ca9f59b444f8f8d9cf0e7f",
+            measurementId: "G-KQMGEW2Y2H"
+        };
+
+        const clinicAppId = "donna-jean-hair-clinic"; 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const analytics = getAnalytics(app);        
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
         let currentUser = null;
-        let currentLeads = []; // For Exporting
+        let currentLeads = []; // For CSV Export
 
-        // --- AUTHENTICATION (RULE 3) ---
-        const initAuth = async () => {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (error) {
-                console.error("Auth failed:", error);
-            }
-        };
-        initAuth();
+        // --- AUTHENTICATION ---
+        signInAnonymously(auth).catch(err => console.error("Clinical Sanctuary Auth Failed:", err));
 
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
             if (user) {
+                console.log("Secure Connection Established.");
                 setupLeadListener();
             }
         });
 
-        // --- DASHBOARD LISTENER (RULE 1 & 2) ---
+        // --- LEAD CAPTURE ---
+        window.saveLeadData = async (event) => {
+            event.preventDefault();
+            const btn = document.getElementById('contact-btn');
+            const successMsg = document.getElementById('success-msg');
+            const form = event.target;
+
+            if (!currentUser) {
+                alert("The sanctuary connection is still initializing. Please wait a moment.");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loader"></span> SENDING...';
+
+            const leadData = {
+                name: form.elements['name'].value,
+                email: form.elements['email'].value,
+                timestamp: serverTimestamp()
+            };
+
+            try {
+                const leadsRef = collection(db, 'artifacts', clinicAppId, 'public', 'data', 'leads');
+                await addDoc(leadsRef, leadData);
+                
+                form.style.opacity = '0.2';
+                form.style.pointerEvents = 'none';
+                successMsg.classList.remove('hidden');
+                btn.innerHTML = 'SENT';
+                form.reset();
+            } catch (error) {
+                console.error("Error saving lead:", error);
+                alert("Communication error. Please try again.");
+                btn.disabled = false;
+                btn.innerHTML = 'SEND LOVE LETTER';
+            }
+        };
+
+        // --- DASHBOARD REAL-TIME LISTENER ---
         const setupLeadListener = () => {
-            if (!currentUser) return;
-            // Strict path structure
-            const leadsRef = collection(db, 'artifacts', appId, 'public', 'data', 'leads');
+            const leadsRef = collection(db, 'artifacts', clinicAppId, 'public', 'data', 'leads');
             
             onSnapshot(leadsRef, (snapshot) => {
                 const leadsList = document.getElementById('leads-list');
@@ -76,7 +97,7 @@
                 currentLeads = [];
                 snapshot.forEach(doc => currentLeads.push({ id: doc.id, ...doc.data() }));
                 
-                // Sort by timestamp in memory (Rule 2)
+                // Sort by timestamp in memory (Newest first)
                 currentLeads.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
 
                 leadCount.innerText = currentLeads.length;
@@ -91,7 +112,7 @@
                         <td class="py-4 px-6 text-sm font-medium text-legacyNavy">${lead.name || 'Anonymous'}</td>
                         <td class="py-4 px-6 text-sm text-legacyNavy/70">${lead.email || 'No Email'}</td>
                         <td class="py-4 px-6 text-xs text-legacyNavy/40">
-                            ${lead.timestamp ? new Date(lead.timestamp.seconds * 1000).toLocaleDateString() : 'Pending'}
+                            ${lead.timestamp ? new Date(lead.timestamp.seconds * 1000).toLocaleDateString() : 'Just now'}
                         </td>
                         <td class="py-4 px-6 text-right">
                             <button onclick="window.deleteLead('${lead.id}')" class="text-[10px] font-bold text-red-400 hover:text-red-600 transition-colors uppercase tracking-widest">
@@ -101,7 +122,7 @@
                     </tr>
                 `).join('');
             }, (error) => {
-                console.error("Firestore Listener Error:", error);
+                console.error("Dashboard Listener Error (Check Security Rules):", error);
             });
         };
 
@@ -115,64 +136,24 @@
             const rows = currentLeads.map(l => [
                 `"${l.name || 'Anonymous'}"`,
                 `"${l.email || 'N/A'}"`,
-                `"${l.timestamp ? new Date(l.timestamp.seconds * 1000).toLocaleDateString() : 'Pending'}"`
+                `"${l.timestamp ? new Date(l.timestamp.seconds * 1000).toLocaleDateString() : 'N/A'}"`
             ]);
             const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
             link.setAttribute("href", URL.createObjectURL(blob));
             link.setAttribute("download", `DonnaJean_Leads_${new Date().toLocaleDateString()}.csv`);
-            document.body.appendChild(link);
             link.click();
-            document.body.removeChild(link);
         };
 
         // --- DELETE FUNCTION ---
         window.deleteLead = async (leadId) => {
             if (!confirm("Are you sure you want to remove this inquiry?")) return;
             try {
-                const leadDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'leads', leadId);
+                const leadDocRef = doc(db, 'artifacts', clinicAppId, 'public', 'data', 'leads', leadId);
                 await deleteDoc(leadDocRef);
             } catch (error) {
                 console.error("Error deleting lead:", error);
-            }
-        };
-
-        // --- SAVE LEAD DATA ---
-        window.saveLeadData = async (event) => {
-            event.preventDefault();
-            const btn = document.getElementById('contact-btn');
-            const successMsg = document.getElementById('success-msg');
-            const form = event.target;
-
-            if (!currentUser) {
-                alert("Connection initializing. Please try again in a moment.");
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerHTML = '<span class="loader"></span> SENDING...';
-
-            const leadData = {
-                name: form.elements['name'].value,
-                email: form.elements['email'].value,
-                timestamp: serverTimestamp()
-            };
-
-            try {
-                const leadsRef = collection(db, 'artifacts', appId, 'public', 'data', 'leads');
-                await addDoc(leadsRef, leadData);
-                
-                form.style.opacity = '0.2';
-                form.style.pointerEvents = 'none';
-                successMsg.classList.remove('hidden');
-                btn.innerHTML = 'SENT';
-                form.reset();
-            } catch (error) {
-                console.error("Error saving lead:", error);
-                alert("Submission failed. Please check your internet connection.");
-                btn.disabled = false;
-                btn.innerHTML = 'SEND LOVE LETTER';
             }
         };
     </script>
@@ -195,6 +176,7 @@
             }
         }
     </script>
+    
     <style>
         .linen-texture {
             background-image: url("https://www.transparenttextures.com/patterns/linen-paper.png");
@@ -748,14 +730,11 @@
                     <button onclick="toggleDashboard()" class="text-[10px] tracking-widest font-bold uppercase text-legacyNavy/20 hover:text-champagneGold transition-all">Admin Dashboard</button>
                 </div>
             </div>
-            <p class="text-[10px] uppercase tracking-[0.3em] text-legacyNavy/40 text-center">© 2024 Our S.P.A.C.E. Studios LLC. All Rights Reserved.</p>
+            <p class="text-[10px] uppercase tracking-[0.3em] text-legacyNavy/40 text-center">© 2026 Our S.P.A.C.E. Studios LLC. All Rights Reserved.</p>
         </div>
     </footer>
 
     <script>
-        // Gemini API Logic
-        const apiKey = "";
-        
         function toggleDashboard() {
             const dash = document.getElementById('admin-dashboard');
             dash.classList.toggle('hidden');
@@ -765,7 +744,21 @@
         }
 
         function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
-        function downloadPDF() { alert('Review the "The Restoration Guide" tab for your typeset PDF source.'); }
+        function downloadPDF() { alert('Review the Guide tab for your typeset PDF source.'); }
+
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    entry.target.style.opacity = '1';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section, header').forEach(section => {
+            observer.observe(section);
+        });
     </script>
 </body>
 </html>
