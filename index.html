@@ -218,24 +218,67 @@
 <body class="bg-warmWhite text-legacyNavy font-sans selection:bg-champagneGold selection:text-white">
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-warmWhite/90 backdrop-blur-md border-b border-legacyNavy/5">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <img src="logo-secondary.png" alt="The Donna Jean Hair Restoration Clinic Logo" class="logo-nav" onerror="this.style.display='none';">
-                <div class="flex flex-col leading-tight">
-                    <span class="text-[10px] tracking-[0.2em] font-medium text-legacyNavy/60 uppercase">Our S.P.A.C.E. Studios</span>
-                    <span class="font-serif text-lg md:text-xl font-bold tracking-tight">The Donna Jean Hair Restoration Clinic</span>
+    <nav class="fixed w-full z-50 transition-all duration-300">
+        <!-- Top Contact Bar -->
+        <div class="bg-legacyNavy text-white py-2 px-6 hidden md:block">
+            <div class="max-w-7xl mx-auto flex justify-end gap-6 text-[10px] font-bold tracking-widest uppercase opacity-90">
+                <a href="tel:7039969030" class="hover:text-champagneGold transition-colors flex items-center gap-2">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                    (703) 996-9030
+                </a>
+                <a href="mailto:victor@our-space.net" class="hover:text-champagneGold transition-colors flex items-center gap-2">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    victor@our-space.net
+                </a>
+            </div>
+        </div>
+
+        <div class="bg-warmWhite/90 backdrop-blur-md border-b border-legacyNavy/5 w-full">
+            <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <img src="logo-secondary.png" alt="Clinic Logo" class="logo-nav" onerror="this.style.display='none';">
+                    <div class="flex flex-col leading-tight">
+                        <span class="text-[10px] tracking-[0.2em] font-medium text-legacyNavy/60 uppercase">Our S.P.A.C.E. Studios</span>
+                        <span class="font-serif text-lg md:text-xl font-bold tracking-tight text-legacyNavy">The Donna Jean Hair Restoration Clinic</span>
+                    </div>
                 </div>
+                <div class="hidden lg:flex items-center space-x-6 text-[11px] font-bold tracking-[0.2em]">
+                    <a href="#story" class="hover:text-champagneGold transition-colors uppercase">Our Story</a>
+                    <a href="#journey" class="hover:text-champagneGold transition-colors uppercase">The Journey</a>
+                    <a href="#why-choose" class="hover:text-champagneGold transition-colors uppercase">Why Us</a>
+                    <a href="#collection" class="hover:text-champagneGold transition-colors uppercase">Services</a>
+                    <a href="#referrals" class="hover:text-champagneGold transition-colors uppercase">Referrals</a>
+                </div>
+                <a href="#contact" class="hidden md:block bg-champagneGold text-white px-6 py-2.5 rounded-full text-xs font-bold tracking-widest hover:bg-legacyNavy transition-all duration-300 shadow-lg shadow-champagneGold/20">BOOK A RITUAL</a>
+
+                <!-- Mobile Menu Toggle -->
+                <button class="lg:hidden p-2 text-legacyNavy" onclick="toggleMobileMenu()">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
             </div>
-            
-            <div class="hidden lg:flex items-center space-x-8 text-sm font-medium tracking-wide">
-                <a href="#story" class="hover:text-champagneGold transition-colors">OUR STORY</a>
-                <a href="#journey" class="hover:text-champagneGold transition-colors">YOUR RESTORATION JOURNEY</a>
-                <a href="#difference" class="hover:text-champagneGold transition-colors">THE SCIENCE</a>
-                <a href="#collection" class="hover:text-champagneGold transition-colors">THE COLLECTION</a>
-                <a href="#referrals" class="hover:text-champagneGold transition-colors">MEDICAL REFERRALS</a>
+        </div>
+        
+        <div id="mobile-menu" class="hidden lg:hidden bg-warmWhite border-b border-legacyNavy/10 px-6 py-8 space-y-6">
+            <div class="space-y-4">
+                <a href="#story" class="block text-sm font-bold tracking-widest uppercase">OUR STORY</a>
+                <a href="#journey" class="block text-sm font-bold tracking-widest uppercase">THE JOURNEY</a>
+                <a href="#why-choose" class="block text-sm font-bold tracking-widest uppercase">WHY US</a>
+                <a href="#collection" class="block text-sm font-bold tracking-widest uppercase">SERVICES</a>
+                <a href="#referrals" class="block text-sm font-bold tracking-widest uppercase">REFERRALS</a>
             </div>
-            <a href="#contact" class="hidden md:block bg-champagneGold text-white px-6 py-2.5 rounded-full text-xs font-bold tracking-widest hover:bg-legacyNavy transition-all duration-300 shadow-lg shadow-champagneGold/20">BOOK A RITUAL</a>
+            <div class="pt-6 border-t border-legacyNavy/5 space-y-4">
+                <a href="tel:7039969030" class="flex items-center gap-3 text-xs font-medium text-legacyNavy/70">
+                    <svg class="w-4 h-4 text-champagneGold" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                    (703) 996-9030
+                </a>
+                <a href="mailto:victor@our-space.net" class="flex items-center gap-3 text-xs font-medium text-legacyNavy/70">
+                    <svg class="w-4 h-4 text-champagneGold" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    victor@our-space.net
+                </a>
+                <a href="#contact" class="block bg-champagneGold text-white text-center py-4 rounded-full text-xs font-bold tracking-widest uppercase">Book A Ritual</a>
+            </div>
         </div>
     </nav>
 
@@ -708,22 +751,29 @@
         </div>
     </section>
 
-      <!-- Footer -->
-    <footer class="bg-warmWhite pt-40 pb-16 border-t border-legacyNavy/5">
-        <div class="max-w-7xl mx-auto px-6 text-center md:text-left">
-            <div class="grid md:grid-cols-12 gap-16 mb-20">
-                <div class="md:col-span-6">
-                    <span class="text-xs tracking-[0.3em] font-semibold text-legacyNavy/30 uppercase">OUR S.P.A.C.E. STUDIOS LLC</span>
-                    <h4 class="font-serif text-3xl font-bold mt-1 uppercase">The Donna Jean Hair Restoration Clinic</h4>
+    <!-- Footer -->
+    <footer class="bg-warmWhite pt-32 pb-16 border-t border-legacyNavy/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-3 gap-12 text-center md:text-left mb-16">
+                <div>
+                    <h4 class="font-serif text-2xl font-bold uppercase mb-4 text-legacyNavy">Sanctuary Location</h4>
+                    <p class="text-sm font-medium leading-loose text-legacyNavy/70">
+                        1010 North Glebe Road 100, Studio 5<br>Arlington, VA 22201
+                    </p>
                 </div>
-                <div class="md:col-span-3 text-xs opacity-50 uppercase tracking-widest font-bold">
-                    HIPAA | NPI: 1346106044 | CARECREDIT
+                <div>
+                    <h4 class="font-serif text-2xl font-bold uppercase mb-4 text-legacyNavy">Contact Us</h4>
+                    <p class="text-sm font-medium leading-loose text-legacyNavy/70">
+                        <a href="tel:7039969030" class="hover:text-champagneGold transition-colors">(703) 996-9030</a><br>
+                        <a href="mailto:victor@our-space.net" class="hover:text-champagneGold transition-colors">victor@our-space.net</a>
+                    </p>
                 </div>
-                <div class="md:col-span-3 md:text-right">
-                    <button onclick="toggleDashboard()" class="text-[10px] tracking-widest font-bold uppercase text-legacyNavy/20 hover:text-champagneGold transition-all">Admin Dashboard</button>
+                <div class="flex flex-col justify-between items-center md:items-end">
+                    <div class="text-[10px] opacity-50 uppercase tracking-widest font-bold text-legacyNavy">HIPAA | NPI | CARECREDIT</div>
+                    <button onclick="toggleDashboard()" class="text-[10px] font-bold uppercase text-legacyNavy/20 hover:text-champagneGold transition-all mt-6">Admin Dashboard</button>
                 </div>
             </div>
-            <p class="text-[10px] uppercase tracking-[0.3em] text-legacyNavy/40 text-center">© 2026 Our S.P.A.C.E. Studios LLC. All Rights Reserved.</p>
+            <p class="text-[10px] text-center text-legacyNavy/30 uppercase tracking-[0.3em]">© 2024 Our S.P.A.C.E. Studios LLC. All Rights Reserved.</p>
         </div>
     </footer>
 
