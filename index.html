@@ -756,28 +756,6 @@
         // Gemini API Logic
         const apiKey = "";
         
-        async function fetchGemini(payload) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            let retries = 0;
-            const maxRetries = 5;
-            while (retries <= maxRetries) {
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (!response.ok) throw new Error('API Error');
-                    const data = await response.json();
-                    return data.candidates?.[0]?.content?.parts?.[0]?.text;
-                } catch (error) {
-                    if (retries === maxRetries) throw error;
-                    await new Promise(res => setTimeout(res, Math.pow(2, retries) * 1000));
-                    retries++;
-                }
-            }
-        }
-
         function toggleDashboard() {
             const dash = document.getElementById('admin-dashboard');
             dash.classList.toggle('hidden');
