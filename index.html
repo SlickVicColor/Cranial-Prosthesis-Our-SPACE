@@ -47,17 +47,13 @@
             }
         });
 
-        // --- LEAD CAPTURE ---
+               // --- ENHANCED LEAD CAPTURE WITH EMAIL NOTIFICATION ---
         window.saveLeadData = async (event) => {
             event.preventDefault();
             const btn = document.getElementById('contact-btn');
             const successMsg = document.getElementById('success-msg');
             const form = event.target;
-
-            if (!currentUser) {
-                alert("The sanctuary connection is still initializing. Please wait a moment.");
-                return;
-            }
+            if (!currentUser) return;
 
             btn.disabled = true;
             btn.innerHTML = '<span class="loader"></span> SENDING...';
@@ -69,8 +65,17 @@
             };
 
             try {
+                // 1. Save to Firebase (Dashboard)
                 const leadsRef = collection(db, 'artifacts', clinicAppId, 'public', 'data', 'leads');
                 await addDoc(leadsRef, leadData);
+
+                // 2. Trigger Email Notification via EmailJS
+                await emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+                    from_name: leadData.name,
+                    from_email: leadData.email,
+                    message: `New Discovery Session Request from ${leadData.name} (${leadData.email}). Check the Admin Dashboard for details.`,
+                    to_email: "victor@our-space.net"
+                });
                 
                 form.style.opacity = '0.2';
                 form.style.pointerEvents = 'none';
@@ -78,8 +83,8 @@
                 btn.innerHTML = 'SENT';
                 form.reset();
             } catch (error) {
-                console.error("Error saving lead:", error);
-                alert("Communication error. Please try again.");
+                console.error("Submission error:", error);
+                alert("The sanctuary connection was interrupted. Please try again or email us directly at victor@our-space.net");
                 btn.disabled = false;
                 btn.innerHTML = 'SEND LOVE LETTER';
             }
@@ -324,6 +329,54 @@
         </div>
     </header>
 
+       <!-- ✨ WHAT TO EXPECT SECTION ✨ -->
+    <section id="expectations" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-sm tracking-[0.3em] font-bold text-champagneGold mb-4 uppercase">Preparing for Your Sanctuary Visit</h2>
+                <h3 class="font-serif text-4xl md:text-6xl mb-8 leading-tight font-bold text-legacyNavy">What to Expect</h3>
+                <p class="text-lg text-legacyNavy/60 font-light max-w-3xl mx-auto italic">
+                    Your first visit is more than a consultation; it is the beginning of your restoration ritual. We ensure a private, clinical, and deeply respectful environment.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Step 1 -->
+                <div class="bg-warmWhite p-8 rounded-[2.5rem] border border-legacyNavy/5 hover:shadow-lg transition-all group">
+                    <div class="w-12 h-12 bg-legacyNavy text-white rounded-full flex items-center justify-center font-serif text-2xl mb-6 shadow-md group-hover:bg-champagneGold transition-colors">1</div>
+                    <h4 class="font-serif text-xl font-bold text-legacyNavy mb-4">Private Arrival</h4>
+                    <p class="text-sm text-legacyNavy/70 leading-relaxed font-medium">
+                        Enter through our discreet S.P.A.C.E. Studios suite. No waiting rooms, just a private sanctuary prepared specifically for you.
+                    </p>
+                </div>
+                <!-- Step 2 -->
+                <div class="bg-warmWhite p-8 rounded-[2.5rem] border border-legacyNavy/5 hover:shadow-lg transition-all group">
+                    <div class="w-12 h-12 bg-legacyNavy text-white rounded-full flex items-center justify-center font-serif text-2xl mb-6 shadow-md group-hover:bg-champagneGold transition-colors">2</div>
+                    <h4 class="font-serif text-xl font-bold text-legacyNavy mb-4">Clinical Analysis</h4>
+                    <p class="text-sm text-legacyNavy/70 leading-relaxed font-medium">
+                        We perform a comprehensive Trichology-led scalp analysis to understand the health of your follicles and skin sensitivity.
+                    </p>
+                </div>
+                <!-- Step 3 -->
+                <div class="bg-warmWhite p-8 rounded-[2.5rem] border border-legacyNavy/5 hover:shadow-lg transition-all group">
+                    <div class="w-12 h-12 bg-legacyNavy text-white rounded-full flex items-center justify-center font-serif text-2xl mb-6 shadow-md group-hover:bg-champagneGold transition-colors">3</div>
+                    <h4 class="font-serif text-xl font-bold text-legacyNavy mb-4">Cranial Blueprint</h4>
+                    <p class="text-sm text-legacyNavy/70 leading-relaxed font-medium">
+                        Precise measurements and high-fidelity texture matching ensure your future prosthesis aligns perfectly with your identity.
+                    </p>
+                </div>
+                <!-- Step 4 -->
+                <div class="bg-warmWhite p-8 rounded-[2.5rem] border border-legacyNavy/5 hover:shadow-lg transition-all group">
+                    <div class="w-12 h-12 bg-legacyNavy text-white rounded-full flex items-center justify-center font-serif text-2xl mb-6 shadow-md group-hover:bg-champagneGold transition-colors">4</div>
+                    <h4 class="font-serif text-xl font-bold text-legacyNavy mb-4">Insurance Roadmap</h4>
+                    <p class="text-sm text-legacyNavy/70 leading-relaxed font-medium">
+                        We provide your medical Superbill and review the prescription requirements needed for your insurance reimbursement.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
 <!-- FREE GUIDE DOWNLOAD SECTION -->
     <section id="guide" class="py-24 bg-legacyNavy text-white linen-texture">
         <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center gap-16">
