@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Navigator | The Donna Jean Clinic</title>
+    <style>
+        :root {
+            --primary: #5c4033; /* Earthy Brown for Donna Jean branding */
+            --accent: #d4af37;  /* Gold */
+            --bg: #faf9f6;
+            --text: #333;
+            --secondary-bg: #f3f0e9;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; margin: 0; padding: 20px; }
+        .container { max-width: 850px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1, h2, h3 { color: var(--primary); }
+        .tab-nav { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid var(--secondary-bg); }
+        .tab { padding: 10px 20px; cursor: pointer; border: none; background: none; font-weight: bold; color: #777; transition: 0.3s; }
+        .tab.active { color: var(--primary); border-bottom: 4px solid var(--accent); }
+        .step { margin-bottom: 30px; padding: 20px; border-left: 4px solid var(--accent); background: #fffdfa; border-radius: 0 8px 8px 0; }
+        .input-group { margin: 15px 0; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .calc-box { background: var(--primary); color: white; padding: 20px; border-radius: 8px; margin-top: 20px; }
+        .script-box { background: var(--secondary-bg); padding: 15px; border-radius: 5px; font-style: italic; border: 1px dashed var(--primary); position: relative; }
+        .badge { background: var(--accent); color: var(--primary); padding: 3px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
+        button { background: var(--accent); border: none; padding: 12px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1rem; }
+        button:hover { filter: brightness(90%); }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Clinical Navigator</h1>
+        <p>A specialized tool by <strong>The Donna Jean Hair Restoration Clinic</strong> designed to help you navigate medical hair preservation and restoration insurance claims.</p>
+    </header>
+
+    <div class="tab-nav">
+        <button class="tab active" onclick="showSection('prosthesis')">Cranial Prosthesis</button>
+        <button class="tab" onclick="showSection('cooling')">Scalp Cooling (Cold Caps)</button>
+    </div>
+
+    <div id="prosthesis-section">
+        <div class="step">
+            <h2>Step 1: The Prescription</h2>
+            <p>Ensure your script specifically lists <strong>HCPCS Code S8095</strong>. If your insurance plan follows Medicare guidelines, they may request <strong>A9282</strong>, though S8095 is the standard for private payers.</p>
+        </div>
+
+        <div class="step">
+            <h2>Step 2: Verification Script</h2>
+            <div class="script-box">
+                "I am inquiring about coverage for a <strong>Cranial Prosthesis</strong> (Code: S8095). Is this covered as a medical necessity for my diagnosis? Is there a maximum allowable amount or a limit on the number of units per year?"
+            </div>
+        </div>
+    </div>
+
+    <div id="cooling-section" class="hidden">
+        <div class="step">
+            <h2>Step 1: Category III Codes</h2>
+            <p>Scalp cooling is often billed under "Emerging Technology" codes. Ensure your provider uses:</p>
+            <ul>
+                <li><strong>0662T:</strong> Scalp cooling device initial measurement and calibration.</li>
+                <li><strong>0663T:</strong> Scalp cooling device placement, monitoring, and removal (per treatment).</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h2>Step 2: Scalp Cooling Script</h2>
+            <div class="script-box">
+                "Does my plan cover <strong>Category III CPT codes 0662T and 0663T</strong> for scalp cooling during chemotherapy? If it is currently excluded, can I request a <strong>clinical exception</strong> due to the medical necessity of hair preservation for my mental and physical recovery?"
+            </div>
+        </div>
+    </div>
+
+    <div class="step">
+        <h2>Estimate Your Responsibility</h2>
+        <div class="input-group">
+            <label>Estimated Total Service Cost ($)</label>
+            <input type="number" id="cost" placeholder="e.g., 2500">
+        </div>
+        <div class="input-group">
+            <label>Remaining Annual Deductible ($)</label>
+            <input type="number" id="deductible" placeholder="0">
+        </div>
+        <div class="input-group">
+            <label>Your Coinsurance % (e.g., 20)</label>
+            <input type="number" id="coinsurance" placeholder="20">
+        </div>
+        <button onclick="calculateCost()">Generate Estimate</button>
+
+        <div id="resultBox" class="calc-box" style="display:none;">
+            <h3>Your Financial Roadmap:</h3>
+            <p>Applied to Deductible: <span id="resDeductible">$0</span></p>
+            <p>Your Coinsurance Share: <span id="resCoinsurance">$0</span></p>
+            <hr>
+            <p><strong>Total Estimated Out-of-Pocket: <span id="resTotal">$0</span></strong></p>
+            <p><small>Check our <strong>Donna Jean Philanthropy Page</strong> if your out-of-pocket costs exceed your current budget; you may be eligible for gap funding.</small></p>
+        </div>
+    </div>
+
+    <footer>
+        <p style="text-align: center; font-size: 0.8em; margin-top: 40px; color: #888;">
+            &copy; 2026 Our S.P.A.C.E. Studios LLC | Arlington, VA<br>
+            <em>The Donna Jean Hair Restoration Clinic is a Clinical Trichology & Cranial Prosthesis Specialty Practice.</em>
+        </p>
+    </footer>
+</div>
+
+<script>
+    function showSection(type) {
+        document.getElementById('prosthesis-section').classList.toggle('hidden', type !== 'prosthesis');
+        document.getElementById('cooling-section').classList.toggle('hidden', type !== 'cooling');
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        event.target.classList.add('active');
+        document.getElementById('resultBox').style.display = 'none';
+    }
+
+    function calculateCost() {
+        const cost = parseFloat(document.getElementById('cost').value) || 0;
+        const deductible = parseFloat(document.getElementById('deductible').value) || 0;
+        const coinsurancePercent = parseFloat(document.getElementById('coinsurance').value) || 0;
+
+        let resDeductible = Math.min(cost, deductible);
+        let remaining = cost - resDeductible;
+        let resCoinsurance = (remaining * (coinsurancePercent / 100));
+        let total = resDeductible + resCoinsurance;
+
+        document.getElementById('resDeductible').innerText = '$' + resDeductible.toFixed(2);
+        document.getElementById('resCoinsurance').innerText = '$' + resCoinsurance.toFixed(2);
+        document.getElementById('resTotal').innerText = '$' + total.toFixed(2);
+        document.getElementById('resultBox').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
