@@ -47,13 +47,17 @@
             }
         });
 
-               // --- ENHANCED LEAD CAPTURE WITH EMAIL NOTIFICATION ---
+ // --- LEAD CAPTURE ---
         window.saveLeadData = async (event) => {
             event.preventDefault();
             const btn = document.getElementById('contact-btn');
             const successMsg = document.getElementById('success-msg');
             const form = event.target;
-            if (!currentUser) return;
+
+            if (!currentUser) {
+                alert("The sanctuary connection is still initializing. Please wait a moment.");
+                return;
+            }
 
             btn.disabled = true;
             btn.innerHTML = '<span class="loader"></span> SENDING...';
@@ -65,26 +69,17 @@
             };
 
             try {
-                // 1. Save to Firebase (Dashboard)
                 const leadsRef = collection(db, 'artifacts', clinicAppId, 'public', 'data', 'leads');
                 await addDoc(leadsRef, leadData);
-
-                // 2. Trigger Email Notification via EmailJS
-                await emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
-                    from_name: leadData.name,
-                    from_email: leadData.email,
-                    message: `New Discovery Session Request from ${leadData.name} (${leadData.email}). Check the Admin Dashboard for details.`,
-                    to_email: "victor@our-space.net"
-                });
-                
+               
                 form.style.opacity = '0.2';
                 form.style.pointerEvents = 'none';
                 successMsg.classList.remove('hidden');
                 btn.innerHTML = 'SENT';
                 form.reset();
             } catch (error) {
-                console.error("Submission error:", error);
-                alert("The sanctuary connection was interrupted. Please try again or email us directly at victor@our-space.net");
+                console.error("Error saving lead:", error);
+                alert("Communication error. Please try again.");
                 btn.disabled = false;
                 btn.innerHTML = 'SEND LOVE LETTER';
             }
